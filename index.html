@@ -1,1 +1,313 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Tatib Pro App</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: { extend: { colors: { brand: '#1a73e8', darkbg: '#121212', darkcard: '#212121' } } }
+    }
+  </script>
+  <style>
+    body { -ms-overflow-style: none; scrollbar-width: none; transition: background-color 0.3s; }
+    ::-webkit-scrollbar { display: none; }
+    .view-section { display: none; animation: fadeIn 0.3s; }
+    .view-section.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    /* UI Kursi Bentuk Kapsul[cite: 1] */
+    .seat-green { background-color: #22c55e; color: white; }
+    .seat-red { background-color: #ef4444; color: white; }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-900 dark:bg-darkbg dark:text-gray-100 min-h-screen flex flex-col pb-10 font-sans select-none">
 
+  <!-- Loading Overlay -->
+  <div id="loading" class="fixed inset-0 bg-black/70 z-50 hidden flex justify-center items-center backdrop-blur-sm">
+      <div class="animate-spin rounded-full h-10 w-10 border-4 border-t-brand border-white"></div>
+  </div>
+  
+  <!-- App Bar Atas -->
+  <div id="topbar" class="w-full flex justify-between items-center p-4 hidden border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-darkcard sticky top-0 z-40 shadow-sm">
+    <button onclick="goDashboard()" id="btn-back" class="hidden text-brand font-bold text-sm px-2 py-1 bg-blue-50 dark:bg-blue-900/30 rounded-lg">◀ BACK</button>
+    <div id="top-title" class="font-bold text-lg mx-auto tracking-wide">DASHBOARD</div>
+    <button onclick="toggleTheme()" class="text-xl p-2 bg-gray-100 dark:bg-gray-800 rounded-full">🌓</button>
+  </div>
+
+  <!-- VIEW: LOGIN -->
+  <div id="view-login" class="view-section active flex flex-col justify-center px-6 pt-32">
+    <div class="text-center mb-10">
+      <h1 class="text-4xl font-extrabold mb-2 text-brand">Tata Tertib</h1>
+      <p class="text-gray-500 dark:text-gray-400 text-sm">Realtime Monitoring System</p>
+    </div>
+    <input type="password" id="pin-input" class="w-full bg-white dark:bg-darkcard border border-gray-300 dark:border-gray-700 rounded-2xl px-4 py-5 text-center text-3xl tracking-[0.5em] focus:ring-2 focus:ring-brand outline-none shadow-sm" placeholder="PIN">
+    <button onclick="login()" class="mt-6 w-full bg-brand hover:bg-blue-700 text-white font-bold py-4 rounded-2xl shadow-lg transition">LOGIN PETUGAS</button>
+  </div>
+
+  <!-- VIEW: DASHBOARD (MAIN HUB) -->
+  <div id="view-dashboard" class="view-section px-4 pt-6 space-y-6">
+    <div class="flex justify-between items-start bg-white dark:bg-darkcard p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
+      <div>
+        <p class="text-xs text-gray-500 dark:text-gray-400">Petugas Aktif</p>
+        <h2 class="text-xl font-bold" id="user-name">Nama</h2>
+        <p class="text-[10px] font-bold text-white bg-brand px-2 py-1 rounded mt-1 inline-block uppercase" id="user-role">Role</p>
+      </div>
+      <button onclick="logout()" class="text-red-500 text-xs font-bold bg-red-50 dark:bg-red-900/20 px-3 py-2 rounded-lg">LOGOUT</button>
+    </div>
+
+    <div class="bg-gradient-to-br from-brand to-blue-800 p-6 rounded-3xl shadow-lg text-center text-white">
+      <p class="text-xs font-bold mb-1 opacity-80">TOTAL HADIRIN REAL-TIME</p>
+      <div class="text-6xl font-black mb-2" id="dash-total">0</div>
+      <div class="flex justify-center gap-6 text-sm font-semibold opacity-90 border-t border-blue-400/30 pt-3 mt-3">
+        <span>🪑 Kursi: <span id="dash-kursi">0</span></span>
+        <span>🚶 Luar: <span id="dash-luar">0</span></span>
+      </div>
+    </div>
+
+    <!-- Container Shortcut (Render via JS) -->
+    <div id="shortcut-container" class="grid grid-cols-2 gap-3"></div>
+  </div>
+
+  <!-- VIEW: DENAH BLOK & SETTING -->
+  <div id="view-denah" class="view-section px-4 pt-4 pb-20">
+    <div id="admin-generate" class="hidden mb-6 p-5 bg-white dark:bg-darkcard rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800">
+      <h3 class="font-bold mb-4 text-center">⚙️ Buat Formasi Denah</h3>
+      <div class="grid grid-cols-3 gap-2 mb-4">
+        <div><label class="text-[10px] text-gray-500 block text-center">JML BLOK</label><input type="number" id="gen-b" value="3" class="w-full bg-gray-100 dark:bg-gray-800 py-3 rounded-lg text-center font-bold outline-none"></div>
+        <div><label class="text-[10px] text-gray-500 block text-center">BARIS</label><input type="number" id="gen-r" value="10" class="w-full bg-gray-100 dark:bg-gray-800 py-3 rounded-lg text-center font-bold outline-none"></div>
+        <div><label class="text-[10px] text-gray-500 block text-center">KOLOM</label><input type="number" id="gen-c" value="10" class="w-full bg-gray-100 dark:bg-gray-800 py-3 rounded-lg text-center font-bold outline-none"></div>
+      </div>
+      <button onclick="generateDenah()" class="w-full bg-gray-900 dark:bg-white text-white dark:text-black py-3 rounded-xl font-bold text-sm">BUAT BARU</button>
+    </div>
+    
+    <div class="w-full bg-gray-200 dark:bg-gray-800 text-center py-3 rounded-xl font-black text-gray-500 dark:text-gray-400 tracking-[0.4em] mb-6 text-sm shadow-inner">PANGGUNG</div>
+    <div id="grid-container" class="space-y-8"></div>
+  </div>
+
+  <!-- VIEW: INPUT HADIRIN LUAR -->
+  <div id="view-luar" class="view-section px-4 pt-6">
+    <div class="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-xl border border-yellow-200 dark:border-yellow-800/50 mb-6 text-sm text-yellow-800 dark:text-yellow-200">
+      <p class="font-bold">Info:</p> Hitung manual hadirin yang duduk lesehan atau berdiri di luar blok kursi.
+    </div>
+    <div id="luar-container" class="space-y-4"></div>
+  </div>
+
+  <script>
+    // MASUKKAN URL GOOGLE APPS SCRIPT ANDA DI SINI
+    const API_URL = "https://script.google.com/macros/s/AKfycbxsDq-FMNioyTRftAjrsQtATbk36Trgco81fsiMJzUbacRUnj8KduIlJnbZ4_Jw44goUA/exec"; 
+    
+    let currentUser = null;
+
+    // Inisialisasi Dark Mode
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) { document.documentElement.classList.add('dark'); }
+    const toggleTheme = () => {
+      document.documentElement.classList.toggle('dark');
+      localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+    };
+
+    const showLoading = (show) => document.getElementById('loading').style.display = show ? 'flex' : 'none';
+
+    // Wrapper Fetch POST (Bypass CORS Preflight Options di GAS)
+    const apiPost = async (payload) => {
+      return fetch(API_URL, {
+        method: 'POST',
+        body: JSON.stringify(payload),
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' } // Trik bypass CORS
+      });
+    };
+
+    // Router Sederhana
+    function navigate(viewId, title = "") {
+      document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+      document.getElementById(viewId).classList.add('active');
+      const topbar = document.getElementById('topbar');
+      
+      if(viewId === 'view-login') { topbar.classList.add('hidden'); } 
+      else {
+        topbar.classList.remove('hidden');
+        document.getElementById('top-title').innerText = title;
+        document.getElementById('btn-back').classList.toggle('hidden', viewId === 'view-dashboard');
+      }
+    }
+    const goDashboard = () => { navigate('view-dashboard', 'DASHBOARD'); loadDashboard(); };
+
+    // Fungsi Login
+    async function login() {
+      const pin = document.getElementById('pin-input').value;
+      if(!pin) return;
+      showLoading(true);
+      try {
+        const res = await (await fetch(`${API_URL}?action=login&pin=${pin}`)).json();
+        if(res.status === "success") {
+          currentUser = res.user;
+          document.getElementById('user-name').innerText = currentUser.nama;
+          document.getElementById('user-role').innerText = `Role: ${currentUser.role} | Tugas: ${currentUser.area}`;
+          document.getElementById('pin-input').value = "";
+          goDashboard();
+        } else alert("PIN Salah atau Tidak Terdaftar!");
+      } catch(e) { alert("Gagal koneksi ke server!"); }
+      showLoading(false);
+    }
+    const logout = () => { currentUser = null; navigate('view-login'); };
+
+    // Load Data Dashboard Utama
+    async function loadDashboard() {
+      showLoading(true);
+      try {
+        const res = await (await fetch(`${API_URL}?action=getDashboard`)).json();
+        if(res.status === "success") {
+          document.getElementById('dash-total').innerText = res.data.total_hadirin;
+          document.getElementById('dash-kursi').innerText = res.data.detail.kursi;
+          document.getElementById('dash-luar').innerText = res.data.detail.luar;
+          renderShortcuts(res.data.daftar_blok, res.data.daftar_area);
+        }
+      } catch(e) { }
+      showLoading(false);
+    }
+
+    // Render Tombol Dinamis Sesuai Role
+    function renderShortcuts(blocks, areas) {
+      const container = document.getElementById('shortcut-container');
+      container.innerHTML = "";
+      const role = currentUser.role; const area = currentUser.area;
+
+      const createBtn = (icon, label, color, onClickFn) => {
+        const btn = document.createElement('button');
+        btn.className = `p-4 rounded-2xl text-left shadow-sm border border-gray-100 dark:border-gray-800 ${color} flex flex-col justify-between h-24 active:scale-95 transition-transform`;
+        btn.innerHTML = `<span class="text-2xl">${icon}</span><span class="font-bold text-sm text-gray-900 dark:text-white">${label}</span>`;
+        btn.onclick = onClickFn;
+        container.appendChild(btn);
+      };
+
+      if(role === "Admin" || (role === "Petugas_Blok" && area === "All")) {
+        blocks.forEach(b => createBtn('🪑', `Blok ${b}`, 'bg-white dark:bg-darkcard', () => openDenah(b)));
+        createBtn('🚶', `Semua Area Luar`, 'bg-blue-50 dark:bg-blue-900/20 border-blue-200', () => openLuar(areas, "Input Hadirin Luar"));
+      } else if (role === "Petugas_Blok") {
+        createBtn('🪑', `Blok ${area}`, 'bg-white dark:bg-darkcard', () => openDenah(area));
+      } else if (role === "Petugas_Luar") {
+        const myArea = areas.find(a => a.area === area);
+        if(myArea) createBtn('🚶', `${area}`, 'bg-blue-50 dark:bg-blue-900/20', () => openLuar([myArea], area));
+      }
+      // Tombol Refresh Tambahan
+      createBtn('🔄', 'Refresh Data', 'bg-gray-100 dark:bg-gray-800', loadDashboard);
+    }
+
+    // Buka Denah
+    async function openDenah(blokId) {
+      navigate('view-denah', `DENAH BLOK ${blokId}`);
+      showLoading(true);
+      document.getElementById('admin-generate').classList.toggle('hidden', currentUser.role !== "Admin");
+      try {
+        const res = await (await fetch(`${API_URL}?action=getBlok&blok=${blokId}`)).json();
+        if(res.status === "success") renderGrid(res.data);
+      } catch(e) {}
+      showLoading(false);
+    }
+
+    // Render Grid Kursi Bentuk Kapsul[cite: 1]
+    function renderGrid(seatData) {
+      const container = document.getElementById('grid-container');
+      container.innerHTML = "";
+      const blocks = [...new Set(seatData.map(s => s.blok))].sort();
+
+      blocks.forEach(blok => {
+        const blokData = seatData.filter(s => s.blok === blok);
+        const blockDiv = document.createElement('div');
+        blockDiv.className = "bg-white dark:bg-darkcard p-5 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-800";
+        blockDiv.innerHTML = `<h3 class="text-center text-xl font-extrabold mb-4 text-brand">BLOK ${blok}</h3>`;
+        
+        const maxKolom = Math.max(...blokData.map(s => s.kolom));
+        const grid = document.createElement('div');
+        grid.style.display = "grid";
+        grid.style.gridTemplateColumns = `repeat(${maxKolom}, minmax(0, 1fr))`;
+        grid.className = "gap-2";
+
+        blokData.forEach(kursi => {
+          const btn = document.createElement('button');
+          const isKosong = kursi.status === "Kosong";
+          let num = ((kursi.baris - 1) * maxKolom) + kursi.kolom;
+          
+          btn.className = `w-full py-2.5 sm:py-3 rounded-full flex justify-center items-center text-[11px] sm:text-xs font-bold transition-transform active:scale-90 shadow-sm ${isKosong ? 'seat-green' : 'seat-red'}`;
+          btn.innerText = num.toString().padStart(2, '0');
+          
+          if(currentUser.role !== "Public") btn.onclick = () => toggleKursi(kursi, btn);
+          grid.appendChild(btn);
+        });
+
+        blockDiv.appendChild(grid);
+
+        // Tombol Reset (Hanya Muncul Jika Admin)
+        if(currentUser.role === "Admin") {
+          const resetBtn = document.createElement('button');
+          resetBtn.className = "mt-6 w-full py-3 bg-red-100 hover:bg-red-200 dark:bg-red-900/30 text-red-600 dark:text-red-400 font-bold rounded-xl text-sm transition";
+          resetBtn.innerText = `⚠ RESET BLOK ${blok}`;
+          resetBtn.onclick = () => resetBlokData(blok);
+          blockDiv.appendChild(resetBtn);
+        }
+        container.appendChild(blockDiv);
+      });
+    }
+
+    // Toggle Kursi Realtime
+    function toggleKursi(kursi, btn) {
+      const isKosong = kursi.status === "Kosong";
+      kursi.status = isKosong ? "Terisi" : "Kosong";
+      
+      // Optimistic UI update (Berubah warna seketika)
+      if(isKosong) {
+        btn.classList.replace('seat-green', 'seat-red');
+      } else {
+        btn.classList.replace('seat-red', 'seat-green');
+      }
+      
+      // Hit API secara background
+      apiPost({ action: 'updateKursi', id_kursi: kursi.id_kursi, status_baru: kursi.status });
+    }
+
+    async function resetBlokData(blok) {
+      if(!confirm(`Yakin kosongkan semua kursi di Blok ${blok}?`)) return;
+      showLoading(true);
+      await apiPost({ action: 'resetBlok', blok: blok });
+      openDenah(blok === "All" ? "All" : blok);
+    }
+
+    async function generateDenah() {
+      const b = document.getElementById('gen-b').value, r = document.getElementById('gen-r').value, c = document.getElementById('gen-c').value;
+      if(!confirm("PERINGATAN: Semua data kursi lama akan terhapus dan diganti formasi baru! Lanjutkan?")) return;
+      showLoading(true);
+      await apiPost({ action: 'generateDenah', jumlah_blok: parseInt(b), baris: parseInt(r), kolom: parseInt(c) });
+      openDenah("All");
+    }
+
+    // UI Input Luar
+    function openLuar(areas, title) {
+      navigate('view-luar', title.toUpperCase());
+      const container = document.getElementById('luar-container');
+      container.innerHTML = "";
+
+      areas.forEach(a => {
+        const div = document.createElement('div');
+        div.className = "bg-white dark:bg-darkcard p-5 rounded-2xl flex justify-between items-center border border-gray-100 dark:border-gray-800 shadow-sm";
+        div.innerHTML = `
+          <div class="font-bold text-gray-800 dark:text-gray-200">${a.area}</div>
+          <div class="flex items-center gap-2">
+            <input type="number" id="input-${a.area.replace(/\s/g,'')}" value="${a.jumlah}" class="w-20 bg-gray-100 dark:bg-gray-800 py-3 text-center font-black text-lg rounded-xl outline-none focus:ring-2 focus:ring-brand">
+            <button onclick="saveLuar('${a.area}', '${a.area.replace(/\s/g,'')}')" class="bg-brand text-white px-5 py-3 rounded-xl font-bold shadow-md hover:bg-blue-700 transition">SAVE</button>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    async function saveLuar(areaName, inputId) {
+      const val = document.getElementById(`input-${inputId}`).value;
+      const btn = event.target;
+      btn.innerText = "⏳";
+      await apiPost({ action: 'updateLuar', area: areaName, jumlah: parseInt(val) });
+      btn.innerText = "✓"; setTimeout(() => btn.innerText = "SAVE", 1500);
+    }
+  </script>
+</body>
+</html>
