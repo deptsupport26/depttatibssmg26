@@ -7,14 +7,11 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* Reset & Transisi Halus */
     body { -ms-overflow-style: none; scrollbar-width: none; background-color: #f1f5f9; }
     ::-webkit-scrollbar { display: none; }
     .app-page { display: none !important; }
     .app-page.is-visible { display: block !important; animation: fadeIn 0.25s ease-out; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-    
-    /* Warna Kursi yang Elegan */
     .seat-green { background-color: #10b981; color: white; border: 1px solid #059669; }
     .seat-red { background-color: #e11d48; color: white; border: 1px solid #be123c; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); }
   </style>
@@ -27,7 +24,7 @@
       <p class="text-white font-bold tracking-widest text-sm animate-pulse">SINKRONISASI...</p>
   </div>
   
-  <!-- TOP NAVBAR (Dibuat Lebih Lega / Tidak Mepet) -->
+  <!-- TOP NAVBAR -->
   <div id="topbar" class="w-full flex justify-between items-center px-5 py-4 md:py-5 bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm hidden">
     <button onclick="goDashboard()" id="btn-back" class="hidden flex items-center gap-1 text-slate-600 font-bold text-xs bg-slate-100 hover:bg-slate-200 px-3 py-2 rounded-lg active:scale-95 transition">
         <span>◀</span> KEMBALI
@@ -38,9 +35,7 @@
     </div>
   </div>
 
-  <!-- ========================================== -->
-  <!-- 1. PAGE: LOGIN (Desain Simple Sesuai Permintaan) -->
-  <!-- ========================================== -->
+  <!-- 1. PAGE: LOGIN -->
   <div id="page-login" class="app-page is-visible flex flex-col justify-center min-h-screen px-6 bg-slate-900">
     <div class="text-center mb-8 relative z-10">
       <h1 class="text-3xl md:text-4xl font-black mb-2 text-teal-400 tracking-tight">PORTAL TATA TERTIB</h1>
@@ -54,9 +49,7 @@
     </div>
   </div>
 
-  <!-- ========================================== -->
-  <!-- 2. PAGE: DASHBOARD (Panel Sederhana) -->
-  <!-- ========================================== -->
+  <!-- 2. PAGE: DASHBOARD -->
   <div id="page-dashboard" class="app-page">
     <div class="bg-slate-900 pt-10 pb-12 px-6 rounded-b-[2rem] shadow-md text-center relative mb-8">
         <h2 class="text-2xl font-black text-white mb-2">Halo, <span id="user-name" class="text-teal-400">Nama</span>!</h2>
@@ -88,8 +81,8 @@
                 </div>
                 <div class="grid grid-cols-2 gap-2 mb-3">
                     <select id="new-petugas-role" class="w-full bg-slate-50 p-3 text-xs font-bold rounded-xl border border-slate-200 outline-none">
-                        <option value="Petugas_Blok">Tugas Blok Kursi</option>
-                        <option value="Petugas_Luar">Tugas Area Luar</option>
+                        <option value="Petugas Blok">Tugas Blok Kursi</option>
+                        <option value="Petugas Luar">Tugas Area Luar</option>
                     </select>
                     <input type="text" id="new-petugas-area" placeholder="Tugas (A / Selasar)" class="w-full bg-slate-50 p-3 text-xs font-bold rounded-xl border border-slate-200 outline-none focus:border-teal-400">
                 </div>
@@ -119,9 +112,7 @@
     </div>
   </div>
 
-  <!-- ========================================== -->
-  <!-- 3. PAGE: DENAH BLOK (Dengan Indikator Sumbu X & Y) -->
-  <!-- ========================================== -->
+  <!-- 3. PAGE: DENAH BLOK -->
   <div id="page-denah" class="app-page px-4 pt-8 pb-20">
     
     <!-- ADMIN: PENGATURAN BLOK -->
@@ -154,9 +145,7 @@
     <div id="grid-container" class="space-y-8 max-w-4xl mx-auto overflow-x-auto pb-4"></div>
   </div>
 
-  <!-- ========================================== -->
   <!-- 4. PAGE: INPUT LUAR -->
-  <!-- ========================================== -->
   <div id="page-luar" class="app-page px-5 pt-8 pb-20 max-w-2xl mx-auto">
     <h3 class="font-black text-slate-800 text-lg mb-6 text-center uppercase">Hitung Area Luar</h3>
     
@@ -168,19 +157,16 @@
     <div id="luar-container" class="space-y-3"></div>
   </div>
 
-  <!-- ========================================== -->
   <!-- 5. PAGE: INFO -->
-  <!-- ========================================== -->
   <div id="page-info" class="app-page px-5 pt-8 pb-20 max-w-2xl mx-auto">
       <div id="content-info" class="bg-white p-5 md:p-6 rounded-3xl shadow-sm border border-slate-200"></div>
   </div>
 
-  <!-- ========================================== -->
-  <!-- JAVASCRIPT LOGIC -->
-  <!-- ========================================== -->
+
+  <!-- SCRIPT LOGIC -->
   <script>
     // MASUKKAN URL API GOOGLE SCRIPT ANDA DI SINI
-    const API_URL = "https://script.google.com/macros/s/AKfycbxsDq-FMNioyTRftAjrsQtATbk36Trgco81fsiMJzUbacRUnj8KduIlJnbZ4_Jw44goUA/exec"; 
+    const API_URL = "YOUR_GOOGLE_SCRIPT_WEB_APP_URL"; 
     
     let currentUser = null;
 
@@ -228,7 +214,10 @@
 
     async function loadDashboard() {
       showLoading(true);
-      const isAdmin = currentUser.role === "Admin";
+      
+      // Normalisasi Role (Mengganti Spasi menjadi Underscore jika ada, agar pengecekan selalu konsisten)
+      const isAdmin = currentUser.role.replace(" ", "_") === "Admin";
+      
       document.getElementById('card-stats').classList.toggle('hidden', !isAdmin);
       document.getElementById('admin-system').classList.toggle('hidden', !isAdmin);
 
@@ -247,7 +236,9 @@
     function renderMainActions(blocks, areas) {
       const container = document.getElementById('main-actions');
       container.innerHTML = "";
-      const role = currentUser.role; 
+      
+      // PERBAIKAN BUG UTAMA: Menyamakan format Role (Spasi atau Garis Bawah akan dibaca sama)
+      const roleStr = currentUser.role.replace(" ", "_"); 
       const area = currentUser.area;
 
       const createBtn = (icon, title, desc, styleClass, onClickFn) => {
@@ -258,21 +249,24 @@
         container.appendChild(btn);
       };
 
-      if(role === "Admin") {
+      if(roleStr === "Admin") {
         createBtn('🪑', 'DENAH KURSI', 'Pantau Blok', 'bg-white text-slate-800 border-slate-200', () => openDenah("All"));
         createBtn('🚶', 'AREA LUAR', 'Hitung Manual', 'bg-white text-slate-800 border-slate-200', () => openLuar(areas, "Semua Area"));
-      } else if (role === "Petugas_Blok") {
+      } else if (roleStr === "Petugas_Blok") {
         createBtn('🪑', `TUGAS BLOK ${area}`, 'Buka denah kursi', 'bg-teal-600 text-white border-transparent col-span-2 shadow-teal-500/30', () => openDenah(area));
-      } else if (role === "Petugas_Luar") {
-        const myArea = areas.find(a => a.area === area);
-        if(myArea) createBtn('🚶', `TUGAS AREA ${area}`, 'Input hadirin', 'bg-indigo-600 text-white border-transparent col-span-2 shadow-indigo-500/30', () => openLuar([myArea], area));
+      } else if (roleStr === "Petugas_Luar") {
+        // PERBAIKAN BUG 2: Jika Area belum ditambahkan Admin di Hadirin_Luar, tombol tetap dibuatkan (Auto-Bypass)
+        let myArea = areas.find(a => a.area.trim().toLowerCase() === area.trim().toLowerCase());
+        if(!myArea) { myArea = { area: area, jumlah: 0 }; } 
+        
+        createBtn('🚶', `TUGAS AREA ${area}`, 'Input hadirin', 'bg-indigo-600 text-white border-transparent col-span-2 shadow-indigo-500/30', () => openLuar([myArea], area));
       }
     }
 
     async function addPetugas() {
         const pin = document.getElementById('new-petugas-pin').value;
         const nama = document.getElementById('new-petugas-nama').value;
-        const role = document.getElementById('new-petugas-role').value;
+        const role = document.getElementById('new-petugas-role').value; // Mengirim format sesuai yg ada di select option
         const area = document.getElementById('new-petugas-area').value;
         if(!pin || !nama || !area) return alert("Lengkapi data petugas!");
         showLoading(true);
@@ -284,11 +278,11 @@
         showLoading(false);
     }
 
-    // --- LOGIKA GRID DENAH DENGAN INDIKATOR SUMBU X & Y ---
+    // --- LOGIKA GRID DENAH ---
     async function openDenah(blokId) {
       navigate('page-denah', blokId === "All" ? "SEMUA BLOK" : `BLOK ${blokId}`);
       showLoading(true);
-      document.getElementById('admin-generate').classList.toggle('hidden', currentUser.role !== "Admin");
+      document.getElementById('admin-generate').classList.toggle('hidden', currentUser.role.replace(" ", "_") !== "Admin");
       
       try {
         const res = await (await fetch(`${API_URL}?action=getBlok&blok=${blokId}`)).json();
@@ -313,7 +307,7 @@
         blockDiv.innerHTML = `
             <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white px-6 py-1 rounded-full shadow-md font-black tracking-widest text-[10px]">BLOK ${blok}</div>
             <div class="mt-4 flex justify-between text-[9px] md:text-[10px] text-slate-400 font-bold mb-4 px-2">
-                <span>Total: ${blokData.length} Kursi</span><span>Petugas: ${currentUser.role === 'Admin' ? 'Admin' : currentUser.nama.split(" ")[0]}</span>
+                <span>Total: ${blokData.length} Kursi</span><span>Petugas: ${currentUser.role.replace(" ", "_") === 'Admin' ? 'Admin' : currentUser.nama.split(" ")[0]}</span>
             </div>`;
         
         const maxKolom = Math.max(...blokData.map(s => s.kolom));
@@ -321,12 +315,10 @@
         
         const grid = document.createElement('div');
         grid.style.display = "grid";
-        // Tambahan 1 kolom di awal untuk angka baris (Y)
         grid.style.gridTemplateColumns = `20px repeat(${maxKolom}, minmax(32px, 1fr))`;
         grid.className = "gap-1 md:gap-1.5 items-center justify-items-center";
 
-        // 1. RENDER HEADER KOLOM (Sumbu X)
-        grid.appendChild(document.createElement('div')); // Pojok kosong
+        grid.appendChild(document.createElement('div'));
         for (let c = 1; c <= maxKolom; c++) {
             const colLabel = document.createElement('div');
             colLabel.className = "text-[9px] md:text-[10px] font-bold text-slate-400 pb-1";
@@ -334,35 +326,31 @@
             grid.appendChild(colLabel);
         }
 
-        // 2. RENDER BARIS (Sumbu Y + Kursi)
         for (let r = 1; r <= maxBaris; r++) {
-            // Label Baris
             const rowLabel = document.createElement('div');
             rowLabel.className = "text-[9px] md:text-[10px] font-bold text-slate-400 pr-1 w-full text-right";
             rowLabel.innerText = r;
             grid.appendChild(rowLabel);
 
-            // Render Tombol Kursi di baris ini
             for (let c = 1; c <= maxKolom; c++) {
                 const kursi = blokData.find(s => s.baris === r && s.kolom === c);
                 if (kursi) {
                     const btn = document.createElement('button');
                     const isKosong = kursi.status === "Kosong";
                     let num = ((kursi.baris - 1) * maxKolom) + kursi.kolom;
-                    // Bentuk square membulat yang konsisten[cite: 10]
                     btn.className = `w-full aspect-square rounded-md md:rounded-lg flex justify-center items-center text-[9px] md:text-xs font-black transition-transform active:scale-75 ${isKosong ? 'seat-green' : 'seat-red'}`;
                     btn.innerText = num.toString().padStart(2, '0');
                     btn.onclick = () => toggleKursi(kursi, btn);
                     grid.appendChild(btn);
                 } else {
-                    grid.appendChild(document.createElement('div')); // Ruang kosong jika asimetris
+                    grid.appendChild(document.createElement('div'));
                 }
             }
         }
 
         blockDiv.appendChild(grid);
         
-        if(currentUser.role === "Admin") {
+        if(currentUser.role.replace(" ", "_") === "Admin") {
             const resetBtn = document.createElement('button');
             resetBtn.className = "mt-5 w-full py-2.5 bg-rose-50 text-rose-600 font-bold rounded-xl text-xs transition border border-rose-100";
             resetBtn.innerHTML = `Kosongkan Blok ${blok}`;
@@ -406,7 +394,7 @@
     // --- LOGIKA AREA LUAR ---
     function openLuar(areas, title) {
       navigate('page-luar', title.toUpperCase());
-      const isAdmin = currentUser.role === "Admin";
+      const isAdmin = currentUser.role.replace(" ", "_") === "Admin";
       document.getElementById('admin-add-area').classList.toggle('hidden', !isAdmin);
       
       const container = document.getElementById('luar-container');
@@ -433,7 +421,11 @@
       const val = document.getElementById(`input-${inputId}`).value;
       const btn = event.target;
       btn.innerText = "⏳";
+      
+      // Jika Area belum terdaftar di database (karena auto-bypass), maka harus di Add dulu sebelum Update
+      await apiPost({ action: 'tambahAreaLuar', nama_area: areaName });
       await apiPost({ action: 'updateLuar', area: areaName, jumlah: parseInt(val) });
+      
       btn.innerText = "✓"; setTimeout(() => btn.innerText = "SAVE", 1500);
     }
     
