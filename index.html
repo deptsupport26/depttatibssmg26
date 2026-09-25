@@ -4,22 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Tatib Command Center</title>
-  
-  <!-- FAVICON CUSTOM (Ikon Tab Browser) -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏢</text></svg>">
-  
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* CSS SUPER KETAT UNTUK MENCEGAH HALAMAN MENUMPUK */
     body { -ms-overflow-style: none; scrollbar-width: none; background-color: #f8fafc; }
     ::-webkit-scrollbar { display: none; }
-    
     .app-page { display: none !important; }
     .app-page.is-visible { display: block !important; animation: fadeIn 0.3s ease-in-out; }
-    
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-    /* UI Kursi Kapsul */
     .seat-green { background-color: #10b981; color: white; border: 1px solid #059669; }
     .seat-red { background-color: #e11d48; color: white; border: 1px solid #be123c; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); }
   </style>
@@ -27,184 +19,154 @@
 <body class="text-slate-800 font-sans antialiased select-none pb-20">
 
   <!-- LOADING OVERLAY -->
-  <div id="loading" class="fixed inset-0 bg-slate-900/80 z-[100] hidden flex-col justify-center items-center backdrop-blur-sm">
+  <div id="loading" class="fixed inset-0 bg-slate-900/90 z-[100] hidden flex-col justify-center items-center backdrop-blur-sm">
       <div class="animate-spin rounded-full h-12 w-12 border-4 border-t-emerald-400 border-white mb-4"></div>
       <p class="text-white font-bold tracking-widest text-sm animate-pulse">SINKRONISASI DATA...</p>
   </div>
   
-  <!-- TOP NAVBAR (Global) -->
+  <!-- TOP NAVBAR -->
   <div id="topbar" class="w-full flex justify-between items-center px-4 py-3 bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm hidden">
-    <button onclick="goDashboard()" id="btn-back" class="hidden flex items-center gap-2 text-slate-600 font-bold text-sm bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-lg active:scale-95 transition">
-        <span>◀</span> KEMBALI
+    <button onclick="goDashboard()" id="btn-back" class="hidden flex items-center gap-1 text-slate-600 font-bold text-xs bg-slate-100 hover:bg-slate-200 px-3 py-2 rounded-lg active:scale-95 transition">
+        <span>◀</span> BACK
     </button>
-    <div id="top-title" class="font-black text-lg mx-auto tracking-widest text-slate-800">TATA TERTIB</div>
-    <div class="flex items-center gap-2 text-xs font-bold text-emerald-700 bg-emerald-100 px-2 py-1 rounded-full">
+    <div id="top-title" class="font-black text-sm md:text-lg mx-auto tracking-widest text-slate-800 uppercase">TATA TERTIB</div>
+    <div class="flex items-center gap-1.5 text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-1.5 rounded-full">
         <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div> Online
     </div>
   </div>
 
-  <!-- ========================================== -->
-  <!-- 1. PAGE: LOGIN (Hanya ini yang aktif di awal) -->
-  <!-- ========================================== -->
+  <!-- 1. PAGE: LOGIN -->
   <div id="page-login" class="app-page is-visible flex flex-col justify-center min-h-screen px-6 bg-slate-900">
-    <!-- Ornamen Latar Belakang -->
     <div class="absolute top-0 left-0 w-full h-64 bg-gradient-to-b from-emerald-900/40 to-transparent pointer-events-none"></div>
-    
     <div class="text-center mb-10 relative z-10">
-      <h1 class="text-4xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-teal-500 tracking-tight">COMMAND CENTER</h1>
-      <p class="text-slate-400 text-sm font-medium tracking-widest">SISTEM TATA TERTIB TERPADU</p>
+      <h1 class="text-4xl md:text-5xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-teal-500 tracking-tight">COMMAND CENTER</h1>
+      <p class="text-slate-400 text-xs md:text-sm font-medium tracking-widest">SISTEM TATA TERTIB TERPADU</p>
     </div>
-    <div class="bg-white p-8 rounded-[2rem] shadow-2xl relative z-10">
+    <div class="bg-white p-6 md:p-8 rounded-[2rem] shadow-2xl relative z-10 w-full max-w-md mx-auto">
         <label class="block text-center text-xs font-bold text-slate-400 mb-4 uppercase tracking-widest">Akses PIN Personil</label>
-        <input type="password" id="pin-input" class="w-full bg-slate-50 border-2 border-slate-200 rounded-2xl px-4 py-4 text-center text-4xl tracking-[0.5em] focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 outline-none transition" placeholder="••••">
-        <button onclick="login()" class="mt-8 w-full bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white font-black py-4 rounded-2xl shadow-lg shadow-emerald-500/30 active:scale-95 transition-transform text-lg">
-            AUTENTIKASI
-        </button>
+        <input type="password" id="pin-input" class="w-full bg-slate-50 border-2 border-slate-200 rounded-2xl px-4 py-4 text-center text-3xl tracking-[0.5em] focus:border-emerald-500 outline-none transition" placeholder="••••">
+        <button onclick="login()" class="mt-6 w-full bg-gradient-to-r from-teal-600 to-emerald-600 text-white font-black py-4 rounded-2xl shadow-lg shadow-emerald-500/30 active:scale-95 transition-transform">AUTENTIKASI</button>
     </div>
   </div>
 
-  <!-- ========================================== -->
-  <!-- 2. PAGE: DASHBOARD (Tema Deep Navy & Emerald) -->
-  <!-- ========================================== -->
+  <!-- 2. PAGE: DASHBOARD -->
   <div id="page-dashboard" class="app-page">
-    
-    <!-- Hero Header Bergradasi Baru -->
     <div class="bg-gradient-to-br from-indigo-950 via-slate-900 to-teal-950 pt-8 pb-12 px-6 rounded-b-[2.5rem] shadow-xl text-center relative overflow-hidden mb-6">
-        <p class="text-emerald-400 font-bold tracking-widest text-xs mb-2 uppercase">Sistem Pemantauan Lapangan</p>
-        <h2 class="text-4xl font-black text-white mb-2">Haii, <span id="user-name" class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-teal-400">Nama</span>! 👋</h2>
-        <div class="inline-block bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full text-white text-xs font-bold border border-white/20 mt-2" id="user-role">
-            Tugas Anda
-        </div>
+        <p class="text-emerald-400 font-bold tracking-widest text-[10px] mb-2 uppercase">Sistem Pemantauan Lapangan</p>
+        <h2 class="text-3xl font-black text-white mb-2">Haii, <span id="user-name" class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-teal-400">Nama</span>! 👋</h2>
+        <div class="inline-block bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full text-white text-[10px] font-bold border border-white/20 mt-2 tracking-widest" id="user-role">TUGAS ANDA</div>
     </div>
 
-    <div class="px-4 space-y-6 -mt-8 relative z-10">
+    <div class="px-4 space-y-6 -mt-8 relative z-10 max-w-2xl mx-auto">
         
-        <!-- Kartu Total Hadirin (Khusus Admin / Global) -->
+        <!-- ADMIN STATS -->
         <div id="card-stats" class="bg-white p-6 rounded-3xl shadow-lg border border-slate-100 text-center hidden">
-            <p class="text-xs font-bold text-slate-400 tracking-widest mb-1">TOTAL HADIRIN REAL-TIME</p>
-            <div class="text-7xl font-black text-slate-800 mb-2 drop-shadow-sm" id="dash-total">0</div>
-            <div class="flex justify-center gap-6 text-sm font-bold text-slate-500 border-t border-slate-100 pt-4 mt-2">
-                <span class="flex items-center gap-1">🪑 Kursi: <span id="dash-kursi" class="text-emerald-600">0</span></span>
-                <span class="flex items-center gap-1">🚶 Luar: <span id="dash-luar" class="text-blue-600">0</span></span>
+            <p class="text-[10px] font-bold text-slate-400 tracking-widest mb-1">TOTAL HADIRIN REAL-TIME</p>
+            <div class="text-7xl font-black text-slate-800 mb-2" id="dash-total">0</div>
+            <div class="flex justify-center gap-6 text-xs font-bold text-slate-500 border-t border-slate-100 pt-4 mt-2">
+                <span class="flex items-center gap-1">🪑 Kursi: <span id="dash-kursi" class="text-emerald-600 text-sm">0</span></span>
+                <span class="flex items-center gap-1">🚶 Luar: <span id="dash-luar" class="text-blue-600 text-sm">0</span></span>
             </div>
         </div>
 
-        <!-- Tombol Aksi Utama (Grid 2 Kolom) -->
-        <div id="main-actions" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <!-- Dirender Dinamis via JS -->
+        <div id="main-actions" class="grid grid-cols-2 gap-3"></div>
+
+        <!-- ADMIN: MANAJEMEN PETUGAS & SISTEM -->
+        <div id="admin-system" class="hidden">
+            <h3 class="font-black text-slate-700 text-xs tracking-widest uppercase flex items-center gap-2 mb-3 px-2 mt-8"><span>⚙️</span> Manajemen Sistem</h3>
+            <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-200">
+                <p class="text-xs font-bold text-slate-800 mb-3">Buat Akun Petugas Baru</p>
+                <div class="grid grid-cols-2 gap-2 mb-3">
+                    <input type="number" id="new-petugas-pin" placeholder="PIN Angka" class="w-full bg-slate-50 p-3 text-xs font-bold rounded-xl border border-slate-200 outline-none">
+                    <input type="text" id="new-petugas-nama" placeholder="Nama Panggilan" class="w-full bg-slate-50 p-3 text-xs font-bold rounded-xl border border-slate-200 outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-2 mb-3">
+                    <select id="new-petugas-role" class="w-full bg-slate-50 p-3 text-xs font-bold rounded-xl border border-slate-200 outline-none">
+                        <option value="Petugas_Blok">Petugas Blok Kursi</option>
+                        <option value="Petugas_Luar">Petugas Area Luar</option>
+                    </select>
+                    <input type="text" id="new-petugas-area" placeholder="Tugas (Misal: A, atau Selasar)" class="w-full bg-slate-50 p-3 text-xs font-bold rounded-xl border border-slate-200 outline-none">
+                </div>
+                <button onclick="addPetugas()" class="w-full bg-slate-800 text-white font-bold py-3 text-xs rounded-xl active:scale-95 transition">TAMBAH PETUGAS</button>
+            </div>
         </div>
 
-        <!-- Apendiks & Dokumen Tambahan (List Menu) -->
         <div>
-            <h3 class="font-black text-slate-700 text-sm tracking-widest uppercase flex items-center gap-2 mb-4 px-2">
-                <span>📑</span> Apendiks & Dokumen
-            </h3>
-            
+            <h3 class="font-black text-slate-700 text-xs tracking-widest uppercase flex items-center gap-2 mb-3 px-2 mt-8"><span>📑</span> Apendiks & Dokumen</h3>
             <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
-                <button onclick="openInfo('panduan')" class="w-full flex items-center justify-between p-5 border-b border-slate-100 active:bg-slate-50 transition">
+                <button onclick="openInfo('panduan')" class="w-full flex items-center justify-between p-4 border-b border-slate-100 active:bg-slate-50">
                     <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center text-xl">📖</div>
-                        <div class="text-left">
-                            <span class="block font-bold text-slate-800">Panduan Operasional</span>
-                            <span class="text-xs text-slate-500">Cara tandai kursi & input data.</span>
-                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center text-xl shrink-0">📖</div>
+                        <div class="text-left"><span class="block font-bold text-sm text-slate-800">Panduan Operasional</span><span class="text-[10px] text-slate-500">Cara tandai kursi & input data.</span></div>
                     </div>
-                    <span class="text-slate-400 font-bold">➔</span>
                 </button>
-
-                <button onclick="openInfo('kontak')" class="w-full flex items-center justify-between p-5 border-b border-slate-100 active:bg-slate-50 transition">
+                <button onclick="openInfo('kontak')" class="w-full flex items-center justify-between p-4 border-b border-slate-100 active:bg-slate-50">
                     <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-xl bg-rose-50 flex items-center justify-center text-xl">🚨</div>
-                        <div class="text-left">
-                            <span class="block font-bold text-slate-800">Struktur Personil Darurat</span>
-                            <span class="text-xs text-slate-500">Kontak Polisi & Posko Keamanan.</span>
-                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-rose-50 flex items-center justify-center text-xl shrink-0">🚨</div>
+                        <div class="text-left"><span class="block font-bold text-sm text-slate-800">Struktur Personil Darurat</span><span class="text-[10px] text-slate-500">Kontak Polisi & Posko.</span></div>
                     </div>
-                    <span class="text-slate-400 font-bold">➔</span>
-                </button>
-
-                <button onclick="openInfo('layout')" class="w-full flex items-center justify-between p-5 active:bg-slate-50 transition">
-                    <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-xl">🗺️</div>
-                        <div class="text-left">
-                            <span class="block font-bold text-slate-800">Layout Area Evakuasi</span>
-                            <span class="text-xs text-slate-500">Skema jalur pelarian gedung.</span>
-                        </div>
-                    </div>
-                    <span class="text-slate-400 font-bold">➔</span>
                 </button>
             </div>
-            
-            <button onclick="logout()" class="mt-6 w-full py-4 bg-slate-200 hover:bg-slate-300 text-slate-600 font-bold rounded-2xl active:scale-95 transition text-sm shadow-sm">LOGOUT AKUN</button>
+            <button onclick="logout()" class="mt-6 w-full py-4 bg-slate-200 text-slate-600 font-bold rounded-2xl active:scale-95 transition text-xs shadow-sm">LOGOUT AKUN</button>
         </div>
     </div>
   </div>
 
-  <!-- ========================================== -->
-  <!-- 3. PAGE: DENAH BLOK (TEMPAT TOMBOL KURSI) -->
-  <!-- ========================================== -->
+  <!-- 3. PAGE: DENAH BLOK -->
   <div id="page-denah" class="app-page px-4 pt-6 pb-20">
     
-    <!-- ADMIN FEATURE: GENERATOR FORMASI BLOK -->
-    <!-- Elemen ini kini direstorasi dan akan muncul khusus untuk Admin -->
-    <div id="admin-generate" class="hidden mb-6 p-5 bg-white rounded-3xl shadow-sm border border-rose-200">
-        <h3 class="font-bold mb-4 text-center text-rose-600 flex justify-center items-center gap-2"><span>⚙️</span> Pengaturan Formasi Denah</h3>
-        <div class="grid grid-cols-3 gap-3 mb-4">
-            <div>
-                <label class="text-[10px] text-slate-500 block text-center font-bold mb-1">JML BLOK</label>
-                <input type="number" id="gen-b" value="3" class="w-full bg-slate-50 py-3 rounded-xl text-center font-bold outline-none border border-slate-200 focus:border-rose-400 focus:ring-2 focus:ring-rose-100">
+    <!-- ADMIN: PENGATURAN BLOK DINAMIS -->
+    <div id="admin-generate" class="hidden mb-6 space-y-4">
+        <!-- Opsi 1: Tambah Blok Tanpa Menghapus -->
+        <div class="p-5 bg-white rounded-3xl shadow-sm border border-teal-200">
+            <h3 class="font-bold mb-3 text-teal-700 text-sm flex items-center gap-2"><span>➕</span> Tambah Blok Baru (Ekstra)</h3>
+            <p class="text-[10px] text-slate-500 mb-3 leading-relaxed">Gunakan ini untuk menambah 1 formasi blok baru tanpa menghapus data kursi yang sudah ada.</p>
+            <div class="flex gap-2 mb-3">
+                <input type="text" id="add-b" placeholder="Nama Blok (Misal: D)" class="w-1/2 bg-slate-50 p-3 rounded-xl text-xs font-bold outline-none border border-slate-200">
+                <input type="number" id="add-r" placeholder="Baris" class="w-1/4 bg-slate-50 p-3 rounded-xl text-xs text-center font-bold outline-none border border-slate-200">
+                <input type="number" id="add-c" placeholder="Kolom" class="w-1/4 bg-slate-50 p-3 rounded-xl text-xs text-center font-bold outline-none border border-slate-200">
             </div>
-            <div>
-                <label class="text-[10px] text-slate-500 block text-center font-bold mb-1">BARIS</label>
-                <input type="number" id="gen-r" value="10" class="w-full bg-slate-50 py-3 rounded-xl text-center font-bold outline-none border border-slate-200 focus:border-rose-400 focus:ring-2 focus:ring-rose-100">
-            </div>
-            <div>
-                <label class="text-[10px] text-slate-500 block text-center font-bold mb-1">KOLOM</label>
-                <input type="number" id="gen-c" value="10" class="w-full bg-slate-50 py-3 rounded-xl text-center font-bold outline-none border border-slate-200 focus:border-rose-400 focus:ring-2 focus:ring-rose-100">
-            </div>
+            <button onclick="tambahBlokEkstra()" class="w-full bg-teal-600 text-white py-3 rounded-xl font-bold text-xs shadow-md active:scale-95 transition">TAMBAHKAN BLOK</button>
         </div>
-        <button onclick="generateDenah()" class="w-full bg-rose-600 hover:bg-rose-700 text-white py-3 rounded-xl font-bold text-sm shadow-md shadow-rose-500/30 active:scale-95 transition">BUAT FORMASI BARU</button>
-        <p class="text-[10px] text-center text-slate-400 mt-3 px-2">Aksi ini akan menghapus tata letak kursi yang lama dan menggantinya dengan struktur grid yang baru.</p>
-    </div>
 
-    <!-- Peringatan untuk klik kursi -->
-    <div class="bg-indigo-50 border border-indigo-200 p-4 rounded-2xl mb-6 flex gap-3 items-start shadow-sm">
-        <span class="text-xl">💡</span>
-        <p class="text-xs font-medium text-indigo-900 leading-relaxed">
-            <b>Instruksi:</b> Tap kursi hijau jika terisi. Sistem akan otomatis menyimpan data secara Real-Time ke Database.
-        </p>
+        <!-- Opsi 2: Reset Formasi Total -->
+        <div class="p-5 bg-white rounded-3xl shadow-sm border border-rose-200">
+            <h3 class="font-bold mb-3 text-rose-600 text-sm flex items-center gap-2"><span>⚠️</span> Ganti Total Formasi (Reset)</h3>
+            <div class="flex gap-2 mb-3">
+                <div class="w-1/3"><label class="text-[9px] text-slate-500 block text-center font-bold mb-1">TOTAL BLOK</label><input type="number" id="gen-b" value="3" class="w-full bg-slate-50 py-3 rounded-xl text-center text-xs font-bold border border-slate-200"></div>
+                <div class="w-1/3"><label class="text-[9px] text-slate-500 block text-center font-bold mb-1">BARIS</label><input type="number" id="gen-r" value="10" class="w-full bg-slate-50 py-3 rounded-xl text-center text-xs font-bold border border-slate-200"></div>
+                <div class="w-1/3"><label class="text-[9px] text-slate-500 block text-center font-bold mb-1">KOLOM</label><input type="number" id="gen-c" value="10" class="w-full bg-slate-50 py-3 rounded-xl text-center text-xs font-bold border border-slate-200"></div>
+            </div>
+            <button onclick="generateDenah()" class="w-full bg-rose-600 text-white py-3 rounded-xl font-bold text-xs shadow-md active:scale-95 transition">HAPUS LAMA & BUAT BARU</button>
+        </div>
     </div>
 
     <!-- Panggung Indicator -->
-    <div class="w-full bg-slate-800 text-center py-4 rounded-2xl font-black text-slate-300 tracking-[0.5em] mb-8 text-sm shadow-xl">
-        PANGGUNG UTAMA
-    </div>
+    <div class="w-full bg-slate-800 text-center py-4 rounded-2xl font-black text-slate-300 tracking-[0.5em] mb-6 text-xs shadow-xl">PANGGUNG UTAMA</div>
     
-    <!-- Area Render Kursi (Dinamis 13x11 dll) -->
     <div id="grid-container" class="space-y-8"></div>
   </div>
 
-  <!-- ========================================== -->
   <!-- 4. PAGE: INPUT LUAR -->
-  <!-- ========================================== -->
-  <div id="page-luar" class="app-page px-4 pt-6">
-    <h3 class="font-black text-slate-800 text-xl mb-6 text-center">Data Hadirin Ekstra</h3>
-    <div id="luar-container" class="space-y-4"></div>
+  <div id="page-luar" class="app-page px-4 pt-6 pb-20">
+    <h3 class="font-black text-slate-800 text-lg mb-4 text-center uppercase">Data Hadirin Ekstra</h3>
+    
+    <!-- ADMIN: TAMBAH AREA BARU -->
+    <div id="admin-add-area" class="hidden mb-6 bg-white p-4 rounded-2xl shadow-sm border border-indigo-200 flex gap-2">
+        <input type="text" id="new-area-name" placeholder="Nama Area Baru (Misal: Balkon)" class="w-full bg-slate-50 px-3 py-3 rounded-xl text-xs font-bold outline-none border border-slate-200">
+        <button onclick="tambahAreaLuar()" class="bg-indigo-600 text-white px-4 py-3 rounded-xl font-bold text-xs shrink-0 shadow-md active:scale-95">TAMBAH</button>
+    </div>
+
+    <div id="luar-container" class="space-y-3"></div>
   </div>
 
-  <!-- ========================================== -->
-  <!-- 5. PAGE: INFO (Kontak, Panduan, Peta) -->
-  <!-- ========================================== -->
+  <!-- 5. PAGE: INFO -->
   <div id="page-info" class="app-page px-4 pt-6 pb-20">
-      <div id="content-info" class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
-          <!-- Dirender dinamis via JS -->
-      </div>
+      <div id="content-info" class="bg-white p-5 rounded-3xl shadow-sm border border-slate-200"></div>
   </div>
 
 
-  <!-- ========================================== -->
-  <!-- JAVASCRIPT LOGIC (ROUTING & API) -->
-  <!-- ========================================== -->
+  <!-- SCRIPT LOGIC -->
   <script>
     // MASUKKAN URL API ANDA DI SINI
     const API_URL = "https://script.google.com/macros/s/AKfycbxsDq-FMNioyTRftAjrsQtATbk36Trgco81fsiMJzUbacRUnj8KduIlJnbZ4_Jw44goUA/exec"; 
@@ -213,15 +175,13 @@
 
     const showLoading = (show) => document.getElementById('loading').style.display = show ? 'flex' : 'none';
 
-    // FUNGSI ROUTING SUPER KETAT
     function navigate(pageId, title = "") {
       document.querySelectorAll('.app-page').forEach(el => el.classList.remove('is-visible'));
       document.getElementById(pageId).classList.add('is-visible');
       
       const topbar = document.getElementById('topbar');
-      if(pageId === 'page-login') { 
-          topbar.classList.add('hidden'); 
-      } else {
+      if(pageId === 'page-login') topbar.classList.add('hidden'); 
+      else {
           topbar.classList.remove('hidden');
           document.getElementById('top-title').innerText = title;
           document.getElementById('btn-back').classList.toggle('hidden', pageId === 'page-dashboard');
@@ -231,12 +191,10 @@
     
     const goDashboard = () => { navigate('page-dashboard', 'COMMAND CENTER'); loadDashboard(); };
 
-    // API POST Handler
     const apiPost = async (payload) => {
       return fetch(API_URL, { method: 'POST', body: JSON.stringify(payload), headers: { 'Content-Type': 'text/plain;charset=utf-8' } });
     };
 
-    // LOGIKA LOGIN
     async function login() {
       const pin = document.getElementById('pin-input').value;
       if(!pin) return alert("Harap masukkan PIN!");
@@ -249,24 +207,19 @@
           document.getElementById('user-name').innerText = currentUser.nama.split(" ")[0]; 
           document.getElementById('user-role').innerText = currentUser.role === 'Admin' ? 'A/V COMMANDER' : `MISSION: ${currentUser.area.toUpperCase()}`;
           document.getElementById('pin-input').value = "";
-          
           goDashboard();
-        } else {
-            alert("Otorisasi Gagal: PIN Tidak Ditemukan.");
-        }
-      } catch(e) { 
-          alert("Gagal terhubung ke Server Database."); 
-      }
+        } else alert("PIN Tidak Ditemukan.");
+      } catch(e) { alert("Gagal koneksi ke Database."); }
       showLoading(false);
     }
     
     const logout = () => { currentUser = null; navigate('page-login'); };
 
-    // LOGIKA DASHBOARD
     async function loadDashboard() {
       showLoading(true);
-      
-      document.getElementById('card-stats').classList.toggle('hidden', currentUser.role !== "Admin");
+      const isAdmin = currentUser.role === "Admin";
+      document.getElementById('card-stats').classList.toggle('hidden', !isAdmin);
+      document.getElementById('admin-system').classList.toggle('hidden', !isAdmin);
 
       try {
         const res = await (await fetch(`${API_URL}?action=getDashboard`)).json();
@@ -274,14 +227,12 @@
           document.getElementById('dash-total').innerText = res.data.total_hadirin;
           document.getElementById('dash-kursi').innerText = res.data.detail.kursi;
           document.getElementById('dash-luar').innerText = res.data.detail.luar;
-          
           renderMainActions(res.data.daftar_blok, res.data.daftar_area);
         }
       } catch(e) { console.error(e); }
       showLoading(false);
     }
 
-    // Render Tombol Besar di Dashboard
     function renderMainActions(blocks, areas) {
       const container = document.getElementById('main-actions');
       container.innerHTML = "";
@@ -290,45 +241,52 @@
 
       const createBtn = (icon, title, desc, styleClass, onClickFn) => {
         const btn = document.createElement('button');
-        btn.className = `p-6 rounded-3xl flex flex-col justify-center items-center text-center shadow-sm border transition transform active:scale-95 ${styleClass}`;
-        btn.innerHTML = `
-            <div class="text-4xl mb-3">${icon}</div>
-            <div class="font-black text-sm tracking-wide">${title}</div>
-            <div class="text-[10px] font-medium opacity-80 mt-1">${desc}</div>
-        `;
+        btn.className = `p-4 sm:p-5 rounded-3xl flex flex-col justify-center items-center text-center shadow-sm border transition transform active:scale-95 ${styleClass}`;
+        btn.innerHTML = `<div class="text-3xl mb-2">${icon}</div><div class="font-black text-xs tracking-wide leading-tight">${title}</div><div class="text-[9px] font-medium opacity-80 mt-1">${desc}</div>`;
         btn.onclick = onClickFn;
         container.appendChild(btn);
       };
 
       if(role === "Admin") {
-        createBtn('🪑', 'MANAJEMEN DENAH', 'Akses Semua Blok', 'bg-white text-slate-800 border-slate-200', () => openDenah("All"));
-        createBtn('🚶', 'INPUT LUAR', 'Data Ekstra Lesehan', 'bg-white text-slate-800 border-slate-200', () => openLuar(areas, "Semua Area"));
+        createBtn('🪑', 'MANAJEMEN<br>DENAH', 'Akses Semua Blok', 'bg-white text-slate-800 border-slate-200', () => openDenah("All"));
+        createBtn('🚶', 'AREA LUAR &<br>LESEHAN', 'Hitung Manual', 'bg-white text-slate-800 border-slate-200', () => openLuar(areas, "Semua Area"));
       } else if (role === "Petugas_Blok") {
-        createBtn('🎯', `MISSION CONTROL: BLOK ${area}`, 'Tap untuk buka grid kursi', 'bg-gradient-to-br from-teal-500 to-emerald-600 text-white shadow-emerald-500/40 border-transparent sm:col-span-2', () => openDenah(area));
+        createBtn('🎯', `MISSION CONTROL:<br>BLOK ${area}`, 'Buka grid kursi', 'bg-gradient-to-br from-teal-500 to-emerald-600 text-white shadow-emerald-500/40 border-transparent col-span-2', () => openDenah(area));
       } else if (role === "Petugas_Luar") {
         const myArea = areas.find(a => a.area === area);
-        if(myArea) {
-            createBtn('📊', `DATA AREA: ${area}`, 'Input hitungan manual', 'bg-gradient-to-br from-indigo-500 to-indigo-600 text-white shadow-indigo-500/40 border-transparent sm:col-span-2', () => openLuar([myArea], area));
-        }
+        if(myArea) createBtn('📊', `DATA AREA:<br>${area}`, 'Input manual', 'bg-gradient-to-br from-indigo-500 to-indigo-600 text-white shadow-indigo-500/40 border-transparent col-span-2', () => openLuar([myArea], area));
       }
     }
 
-    // LOGIKA DENAH (GRID KURSI)
+    // --- FITUR PETUGAS BARU ---
+    async function addPetugas() {
+        const pin = document.getElementById('new-petugas-pin').value;
+        const nama = document.getElementById('new-petugas-nama').value;
+        const role = document.getElementById('new-petugas-role').value;
+        const area = document.getElementById('new-petugas-area').value;
+        
+        if(!pin || !nama || !area) return alert("Lengkapi data petugas!");
+        
+        showLoading(true);
+        await apiPost({ action: 'tambahPetugas', pin, nama, role, area });
+        alert(`Petugas ${nama} berhasil ditambahkan! Silakan beri PIN ${pin} kepadanya.`);
+        document.getElementById('new-petugas-pin').value = "";
+        document.getElementById('new-petugas-nama').value = "";
+        document.getElementById('new-petugas-area').value = "";
+        showLoading(false);
+    }
+
+    // --- LOGIKA DENAH (GRID KURSI) ---
     async function openDenah(blokId) {
       navigate('page-denah', blokId === "All" ? "SEMUA BLOK" : `BLOK ${blokId}`);
       showLoading(true);
-      
-      // RESTORASI FITUR: Tampilkan form generator HANYA jika yang login adalah Admin
       document.getElementById('admin-generate').classList.toggle('hidden', currentUser.role !== "Admin");
       
       try {
         const res = await (await fetch(`${API_URL}?action=getBlok&blok=${blokId}`)).json();
         if(res.status === "success") {
-            if(res.data.length === 0) {
-                document.getElementById('grid-container').innerHTML = `<div class="text-center bg-white p-10 rounded-3xl border border-slate-200 shadow-sm"><span class="text-4xl block mb-2">📭</span><p class="text-slate-500 font-bold">Data kursi kosong.</p><p class="text-xs text-slate-400 mt-2">Silakan gunakan fitur formasi denah di atas untuk men-generate kursi.</p></div>`;
-            } else {
-                renderGrid(res.data);
-            }
+            if(res.data.length === 0) document.getElementById('grid-container').innerHTML = `<div class="text-center bg-white p-10 rounded-3xl border border-slate-200"><span class="text-3xl block mb-2">📭</span><p class="text-slate-500 font-bold text-sm">Data kursi kosong.</p></div>`;
+            else renderGrid(res.data);
         }
       } catch(e) {}
       showLoading(false);
@@ -342,17 +300,12 @@
       blocks.forEach(blok => {
         const blokData = seatData.filter(s => s.blok === blok);
         const blockDiv = document.createElement('div');
-        blockDiv.className = "bg-white p-5 rounded-3xl shadow-sm border border-slate-200 relative";
+        blockDiv.className = "bg-white p-4 sm:p-5 rounded-3xl shadow-sm border border-slate-200 relative";
         
-        blockDiv.innerHTML = `
-            <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-indigo-950 text-white px-6 py-1.5 rounded-full shadow-md font-black tracking-widest text-xs">
-                BLOK ${blok}
-            </div>
-            <div class="mt-4 flex justify-between text-[10px] text-slate-400 font-bold mb-4 px-2">
-                <span>Total: ${blokData.length} Kursi</span>
-                <span class="text-teal-600">Petugas: ${currentUser.role === 'Admin' ? 'Pengawas (Admin)' : currentUser.nama.split(" ")[0]}</span>
-            </div>
-        `;
+        blockDiv.innerHTML = `<div class="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-indigo-950 text-white px-6 py-1.5 rounded-full shadow-md font-black tracking-widest text-[10px]">BLOK ${blok}</div>
+            <div class="mt-4 flex justify-between text-[9px] sm:text-[10px] text-slate-400 font-bold mb-4 px-1">
+                <span>Total: ${blokData.length} Kursi</span><span>${currentUser.role === 'Admin' ? 'Admin' : currentUser.nama.split(" ")[0]}</span>
+            </div>`;
         
         const maxKolom = Math.max(...blokData.map(s => s.kolom));
         const grid = document.createElement('div');
@@ -364,25 +317,21 @@
           const btn = document.createElement('button');
           const isKosong = kursi.status === "Kosong";
           let num = ((kursi.baris - 1) * maxKolom) + kursi.kolom;
-          
-          btn.className = `w-full py-3 sm:py-4 rounded-xl flex justify-center items-center text-[10px] sm:text-xs font-black transition-transform active:scale-75 ${isKosong ? 'seat-green' : 'seat-red'}`;
+          btn.className = `w-full py-2.5 sm:py-3.5 rounded-[0.4rem] sm:rounded-xl flex justify-center items-center text-[9px] sm:text-xs font-black transition-transform active:scale-75 ${isKosong ? 'seat-green' : 'seat-red'}`;
           btn.innerText = num.toString().padStart(2, '0');
-          
           btn.onclick = () => toggleKursi(kursi, btn);
           grid.appendChild(btn);
         });
 
         blockDiv.appendChild(grid);
         
-        // Tombol Reset Per Blok khusus Admin
         if(currentUser.role === "Admin") {
             const resetBtn = document.createElement('button');
-            resetBtn.className = "mt-6 w-full py-3 bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold rounded-xl text-sm transition border border-rose-200";
-            resetBtn.innerHTML = `⚠ Reset Kosong Blok ${blok}`;
+            resetBtn.className = "mt-5 w-full py-2.5 bg-rose-50 text-rose-600 font-bold rounded-xl text-xs transition border border-rose-200";
+            resetBtn.innerHTML = `⚠ Kosongkan Blok ${blok}`;
             resetBtn.onclick = () => resetBlokData(blok);
             blockDiv.appendChild(resetBtn);
         }
-        
         container.appendChild(blockDiv);
       });
     }
@@ -390,52 +339,58 @@
     function toggleKursi(kursi, btn) {
       const isKosong = kursi.status === "Kosong";
       kursi.status = isKosong ? "Terisi" : "Kosong";
-      
-      if(isKosong) {
-        btn.classList.replace('seat-green', 'seat-red');
-      } else {
-        btn.classList.replace('seat-red', 'seat-green');
-      }
-      
+      isKosong ? btn.classList.replace('seat-green', 'seat-red') : btn.classList.replace('seat-red', 'seat-green');
       apiPost({ action: 'updateKursi', id_kursi: kursi.id_kursi, status_baru: kursi.status });
     }
     
     async function resetBlokData(blok) {
-      if(!confirm(`PERINGATAN!\nAnda yakin ingin mengosongkan (reset) seluruh kursi di Blok ${blok}?`)) return;
+      if(!confirm(`Yakin mengosongkan Blok ${blok}?`)) return;
       showLoading(true);
       await apiPost({ action: 'resetBlok', blok: blok });
       openDenah(blok === "All" ? "All" : blok);
     }
 
-    // FUNGSI UTAMA GENERATE BLOK BARU
+    // FITUR BARU: Tambah 1 Blok Saja (Append)
+    async function tambahBlokEkstra() {
+        const b = document.getElementById('add-b').value;
+        const r = document.getElementById('add-r').value;
+        const c = document.getElementById('add-c').value;
+        if(!b || !r || !c) return alert("Isi Nama, Baris, dan Kolom!");
+        showLoading(true);
+        await apiPost({ action: 'tambahBlokSpesifik', nama_blok: b, baris: parseInt(r), kolom: parseInt(c) });
+        openDenah("All");
+    }
+
+    // Ganti Total (Overwrite)
     async function generateDenah() {
-      const b = document.getElementById('gen-b').value;
-      const r = document.getElementById('gen-r').value;
-      const c = document.getElementById('gen-c').value;
-      
-      if(!confirm("KRITIKAL!\nSemua data kursi yang ada saat ini akan TERHAPUS dan diganti formasi baru.\nLanjutkan?")) return;
-      
+      const b = document.getElementById('gen-b').value, r = document.getElementById('gen-r').value, c = document.getElementById('gen-c').value;
+      if(!confirm("⚠️ DATA LAMA AKAN DIHAPUS. Lanjutkan?")) return;
       showLoading(true);
       await apiPost({ action: 'generateDenah', jumlah_blok: parseInt(b), baris: parseInt(r), kolom: parseInt(c) });
-      
-      // Muat ulang tampilan denah setelah selesai membuat
       openDenah("All");
     }
 
-    // LOGIKA INPUT LUAR & INFO
+    // --- LOGIKA AREA LUAR ---
     function openLuar(areas, title) {
       navigate('page-luar', title.toUpperCase());
+      const isAdmin = currentUser.role === "Admin";
+      document.getElementById('admin-add-area').classList.toggle('hidden', !isAdmin);
+      
       const container = document.getElementById('luar-container');
       container.innerHTML = "";
 
       areas.forEach(a => {
         const div = document.createElement('div');
-        div.className = "bg-white p-5 rounded-3xl flex justify-between items-center border border-slate-200 shadow-sm";
+        div.className = "bg-white p-4 rounded-3xl flex justify-between items-center border border-slate-200 shadow-sm gap-2";
+        
+        let delBtn = isAdmin ? `<button onclick="hapusAreaLuar('${a.area}')" class="bg-rose-100 text-rose-600 px-3 py-3 rounded-xl font-bold text-sm shrink-0 active:scale-95">🗑️</button>` : "";
+        
         div.innerHTML = `
-          <div class="font-bold text-slate-800">${a.area}</div>
-          <div class="flex items-center gap-2">
-            <input type="number" id="input-${a.area.replace(/\s/g,'')}" value="${a.jumlah}" class="w-20 bg-slate-50 py-3 text-center font-black text-xl rounded-xl outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 border border-slate-200">
-            <button onclick="saveLuar('${a.area}', '${a.area.replace(/\s/g,'')}')" class="bg-teal-600 text-white px-5 py-3 rounded-xl font-bold shadow-md hover:bg-teal-700 transition active:scale-95">SAVE</button>
+          <div class="font-bold text-slate-800 text-sm truncate w-full">${a.area}</div>
+          <div class="flex items-center gap-2 shrink-0">
+            <input type="number" id="input-${a.area.replace(/\s/g,'')}" value="${a.jumlah}" class="w-16 sm:w-20 bg-slate-50 py-3 text-center font-black text-lg rounded-xl outline-none border border-slate-200 focus:border-teal-400">
+            <button onclick="saveLuar('${a.area}', '${a.area.replace(/\s/g,'')}')" class="bg-teal-600 text-white px-4 py-3 rounded-xl font-bold text-xs shadow-md active:scale-95">SAVE</button>
+            ${delBtn}
           </div>
         `;
         container.appendChild(div);
@@ -447,46 +402,41 @@
       const btn = event.target;
       btn.innerText = "⏳";
       await apiPost({ action: 'updateLuar', area: areaName, jumlah: parseInt(val) });
-      btn.innerText = "✓"; 
-      setTimeout(() => btn.innerText = "SAVE", 1500);
+      btn.innerText = "✓"; setTimeout(() => btn.innerText = "SAVE", 1500);
+    }
+    
+    // FITUR BARU: Tambah & Hapus Area Luar
+    async function tambahAreaLuar() {
+        const name = document.getElementById('new-area-name').value;
+        if(!name) return;
+        showLoading(true);
+        await apiPost({ action: 'tambahAreaLuar', nama_area: name });
+        document.getElementById('new-area-name').value = "";
+        
+        // Refresh UI Area
+        const res = await (await fetch(`${API_URL}?action=getDashboard`)).json();
+        openLuar(res.data.daftar_area, "Semua Area");
+        showLoading(false);
+    }
+    
+    async function hapusAreaLuar(name) {
+        if(!confirm(`Hapus area luar "${name}"?`)) return;
+        showLoading(true);
+        await apiPost({ action: 'hapusAreaLuar', nama_area: name });
+        
+        // Refresh UI Area
+        const res = await (await fetch(`${API_URL}?action=getDashboard`)).json();
+        openLuar(res.data.daftar_area, "Semua Area");
+        showLoading(false);
     }
 
     function openInfo(type) {
         navigate('page-info', 'DOKUMEN');
         const container = document.getElementById('content-info');
-        
         if(type === 'panduan') {
-            container.innerHTML = `
-                <h3 class="font-black text-lg mb-4">📖 Panduan Operasional</h3>
-                <ul class="space-y-4 text-sm text-slate-600">
-                    <li class="flex gap-3"><span class="w-6 h-6 bg-teal-100 text-teal-700 rounded-full flex items-center justify-center font-bold shrink-0">1</span> <p>Pilih menu <b>Mission Control</b> pada Dashboard utama.</p></li>
-                    <li class="flex gap-3"><span class="w-6 h-6 bg-teal-100 text-teal-700 rounded-full flex items-center justify-center font-bold shrink-0">2</span> <p>Layar akan menampilkan formasi kursi sesuai area tugas Anda (misal Blok A).</p></li>
-                    <li class="flex gap-3"><span class="w-6 h-6 bg-teal-100 text-teal-700 rounded-full flex items-center justify-center font-bold shrink-0">3</span> <p>Klik kotak <span class="text-emerald-600 font-bold">Hijau (Kosong)</span> untuk mengubahnya menjadi <span class="text-rose-600 font-bold">Merah (Terisi)</span>. Data otomatis sinkron ke Sheets.</p></li>
-                </ul>
-            `;
+            container.innerHTML = `<h3 class="font-black text-sm mb-4 text-indigo-900">📖 Panduan</h3><ul class="space-y-3 text-xs text-slate-600 leading-relaxed"><li class="flex gap-2"><span>1.</span><p>Pilih Mission Control di Dashboard.</p></li><li class="flex gap-2"><span>2.</span><p>Tap kursi <b class="text-emerald-600">Hijau (Kosong)</b> untuk ubah ke <b class="text-rose-600">Merah (Terisi)</b>. Data otomatis sinkron.</p></li></ul>`;
         } else if (type === 'kontak') {
-            container.innerHTML = `
-                <h3 class="font-black text-lg mb-4 text-rose-600">🚨 Struktur Personil Darurat</h3>
-                <div class="space-y-3">
-                    <a href="tel:112" class="flex justify-between items-center p-4 bg-rose-50 rounded-2xl border border-rose-100 active:scale-95">
-                        <div><p class="font-bold text-rose-700">Polisi & Medis</p><p class="text-xs text-rose-500">Tap untuk telepon</p></div>
-                        <span class="text-xl font-black text-rose-600">112 📞</span>
-                    </a>
-                    <div class="flex justify-between items-center p-4 bg-slate-50 rounded-2xl border border-slate-100">
-                        <div><p class="font-bold text-slate-800">Posko Keamanan</p><p class="text-xs text-slate-500">Bpk. Koordinator</p></div>
-                        <span class="font-bold text-slate-700">0811-XXXX-XXXX</span>
-                    </div>
-                </div>
-            `;
-        } else if (type === 'layout') {
-            container.innerHTML = `
-                <h3 class="font-black text-lg mb-4 text-teal-700">🗺️ Layout Area Evakuasi</h3>
-                <div class="w-full bg-slate-100 rounded-2xl overflow-hidden border border-slate-200 h-48 flex items-center justify-center relative">
-                    <!-- Ganti src di bawah dengan URL gambar asli Anda -->
-                    <img src="https://via.placeholder.com/600x400.png?text=Denah+Evakuasi" alt="Peta" class="w-full h-full object-cover">
-                </div>
-                <p class="text-xs text-slate-500 mt-4 text-center">Ganti URL gambar di kode HTML untuk memasukkan peta asli area.</p>
-            `;
+            container.innerHTML = `<h3 class="font-black text-sm mb-4 text-rose-600">🚨 Struktur Personil Darurat</h3><div class="space-y-2"><a href="tel:112" class="flex justify-between items-center p-4 bg-rose-50 rounded-2xl"><p class="font-bold text-rose-700 text-xs">Polisi & Medis</p><span class="font-black text-rose-600">112 📞</span></a></div>`;
         }
     }
   </script>
