@@ -13,25 +13,31 @@
         .app-page.is-visible { display: block !important; animation: fadeIn 0.3s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        /* Warna Tombol Kursi */
         .seat-green { background-color: #10b981; color: white; border: 1px solid #059669; }
         .seat-red { background-color: #e11d48; color: white; border: 1px solid #be123c; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); }
         
         .collapsible-content { display: none; }
         .collapsible-content.expanded { display: block; animation: fadeIn 0.2s ease-in; }
         
-        /* Toast Notification untuk Background Sync */
         #toast { transition: opacity 0.3s ease; }
+        
+        /* Variabel CSS untuk dinamis font size di halaman Jadwal Tugas */
+        :root {
+            --base-font-size: 14px;
+        }
+        .zoomable-text { font-size: var(--base-font-size); }
+        .zoomable-text h3 { font-size: calc(var(--base-font-size) * 1.25); }
+        .zoomable-text p, .zoomable-text li, .zoomable-text span, .zoomable-text td { font-size: inherit; }
     </style>
 </head>
 <body class="text-slate-800 font-sans antialiased select-none pb-24">
 
-    <!-- TOAST NOTIFICATION (Background Sync) -->
+    <!-- TOAST NOTIFICATION -->
     <div id="toast" class="fixed bottom-5 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white px-4 py-2 rounded-full text-xs font-bold shadow-lg opacity-0 pointer-events-none z-50 flex items-center gap-2">
         <span id="toast-icon">✅</span> <span id="toast-msg">Tersimpan</span>
     </div>
 
-    <!-- INITIAL LOADING SAJA (Dihilangkan saat tap kursi) -->
+    <!-- LOADING OVERLAY -->
     <div id="loading" class="fixed inset-0 bg-slate-900/90 z-[100] hidden flex-col justify-center items-center backdrop-blur-sm">
         <div class="animate-spin rounded-full h-12 w-12 border-4 border-t-teal-500 border-white mb-4"></div>
         <p class="text-white font-bold tracking-widest text-sm animate-pulse" id="loading-text">MEMUAT DATA...</p>
@@ -39,7 +45,6 @@
 
     <!-- TOP NAVBAR -->
     <div class="w-full flex justify-between items-center px-4 py-4 bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
-        <!-- Tombol KEMBALI yg Jelas -->
         <button onclick="navigate('page-dashboard')" id="btn-home" class="hidden flex items-center gap-1 text-slate-600 font-bold text-xs bg-slate-100 hover:bg-slate-200 px-3 py-2 rounded-lg active:scale-95 transition">
             <span>◀</span> KEMBALI
         </button>
@@ -48,7 +53,7 @@
         
         <div class="flex items-center gap-2">
             <button onclick="loadDataFromAPI(true)" class="text-xl active:scale-95 transition bg-slate-50 p-2 rounded-full" title="Refresh Data">🔄</button>
-            <button onclick="bukaMenuAdmin()" id="btn-admin" class="text-xl active:scale-95 transition grayscale opacity-50 hover:grayscale-0 hover:opacity-100">⚙️</button>
+            <button onclick="bukaMenuAdmin()" id="btn-admin" class="text-xl active:scale-95 transition grayscale opacity-50 hover:grayscale-0 hover:opacity-100 p-2">⚙️</button>
         </div>
     </div>
 
@@ -84,7 +89,7 @@
                 <button onclick="navigate('page-luar')" class="p-5 rounded-3xl flex flex-col justify-center items-center text-center shadow-sm border border-slate-200 bg-white active:scale-95 transition">
                     <div class="text-4xl mb-2">🚶</div>
                     <div class="font-black text-xs tracking-wide">AREA LUAR</div>
-                    <div class="text-[9px] font-medium text-slate-500 mt-1">Hitung Manual</div>
+                    <div class="text-[9px] font-medium text-slate-500 mt-1">Hitung Area Luar Blok</div>
                 </button>
             </div>
 
@@ -111,86 +116,92 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- 3. AREA LUAR (TOMBOL PLUS MINUS + GETAR) -->
+    <!-- 3. AREA LUAR BLOK (+/- & HAPTIC) -->
     <!-- ========================================== -->
     <div id="page-luar" class="app-page px-5 pt-8 pb-20 max-w-2xl mx-auto">
         <div class="bg-indigo-50 border border-indigo-200 p-4 rounded-2xl mb-6 flex gap-3 items-start shadow-sm">
             <span class="text-xl">💡</span>
-            <p class="text-xs font-medium text-indigo-900 leading-relaxed">Gunakan tombol + dan - untuk menghitung hadirin di luar area blok kursi (lesehan, dll).</p>
+            <p class="text-xs font-medium text-indigo-900 leading-relaxed">Gunakan tombol + dan - untuk menghitung hadirin di luar area blok kursi.</p>
         </div>
 
         <div class="bg-white p-8 rounded-3xl flex flex-col items-center border border-slate-200 shadow-sm text-center">
-            <div class="font-black text-slate-400 text-xs tracking-widest mb-4">TOTAL HADIRIN LUAR</div>
+            <div class="font-black text-slate-400 text-xs tracking-widest mb-4">TOTAL HADIRIN LUAR BLOK</div>
             
             <div class="flex items-center justify-center gap-6 mb-6">
-                <!-- Tombol Minus -->
-                <button onclick="ubahAreaLuar(-1)" class="w-16 h-16 rounded-full bg-slate-100 border border-slate-200 text-3xl font-black text-slate-600 active:scale-90 active:bg-rose-100 active:text-rose-600 transition shadow-sm select-none touch-manipulation">
+                <!-- Tombol Minus (Haptic inline via onclick) -->
+                <button onclick="ubahAreaLuar(-1); if(navigator.vibrate) navigator.vibrate(30);" class="w-16 h-16 rounded-full bg-slate-100 border border-slate-200 text-3xl font-black text-slate-600 active:scale-90 active:bg-rose-100 active:text-rose-600 transition shadow-sm select-none touch-manipulation">
                     -
                 </button>
                 
-                <!-- Display Angka -->
                 <div class="text-6xl font-black text-slate-800 w-24" id="display-luar">0</div>
                 
-                <!-- Tombol Plus -->
-                <button onclick="ubahAreaLuar(1)" class="w-16 h-16 rounded-full bg-teal-50 border border-teal-200 text-3xl font-black text-teal-600 active:scale-90 active:bg-teal-500 active:text-white transition shadow-sm select-none touch-manipulation">
+                <!-- Tombol Plus (Haptic inline via onclick) -->
+                <button onclick="ubahAreaLuar(1); if(navigator.vibrate) navigator.vibrate(50);" class="w-16 h-16 rounded-full bg-teal-50 border border-teal-200 text-3xl font-black text-teal-600 active:scale-90 active:bg-teal-500 active:text-white transition shadow-sm select-none touch-manipulation">
                     +
                 </button>
             </div>
             
-            <button onclick="syncLuarToAPI()" id="btn-sync-luar" class="bg-slate-800 text-white px-8 py-3 rounded-xl font-bold text-xs shadow-md active:scale-95 transition">SIMPAN KE DATABASE</button>
+            <button onclick="syncLuarToAPI()" id="btn-sync-luar" class="bg-slate-800 text-white px-8 py-3 rounded-xl font-bold text-xs shadow-md active:scale-95 transition mt-2">SIMPAN KE DATABASE</button>
         </div>
     </div>
 
     <!-- ========================================== -->
-    <!-- 4. JADWAL TUGAS (FONT & LAYOUT DIPERBAIKI) -->
+    <!-- 4. JADWAL TUGAS (REVISI UKURAN NORMAL & ZOOMABLE) -->
     <!-- ========================================== -->
-    <div id="page-tugas" class="app-page px-4 md:px-5 pt-6 pb-20 max-w-2xl mx-auto">
-        <h2 class="text-xl font-black text-slate-800 mb-6 text-center uppercase tracking-widest border-b-2 border-slate-200 pb-3">Daftar Penugasan</h2>
+    <div id="page-tugas" class="app-page px-4 md:px-5 pt-6 pb-20 max-w-3xl mx-auto zoomable-text">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-black text-slate-800 uppercase tracking-widest">Daftar Penugasan</h2>
+            <!-- Zoom Controls -->
+            <div class="flex gap-1">
+                <button onclick="zoomText(-2)" class="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-200 text-slate-700 font-bold active:bg-slate-300">A-</button>
+                <button onclick="zoomText(2)" class="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-200 text-slate-700 font-bold active:bg-slate-300">A+</button>
+            </div>
+        </div>
         
         <div class="space-y-6">
             
             <!-- KEAMANAN -->
-            <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm">
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
                 <div class="flex items-center gap-3 mb-4 pb-3 border-b border-slate-100">
-                    <span class="text-2xl">🛡️</span><h3 class="font-black text-slate-800 text-base tracking-widest">KEAMANAN</h3>
+                    <span class="text-2xl">🛡️</span><h3 class="font-black text-slate-800 uppercase tracking-widest">Keamanan</h3>
                 </div>
-                <p class="text-xs text-slate-600 font-medium mb-5 leading-relaxed bg-slate-50 p-4 rounded-xl border border-slate-100">
+                <p class="text-slate-600 mb-5 leading-relaxed bg-slate-50 p-4 rounded-lg border border-slate-100">
                     Memastikan keamanan area gedung, mengatur sweeping sebelum, selama, & sesudah acara dimulai. Mengatur jaga area pintu depan, belakang panggung, lift dan toilet bawah.
                 </p>
-                <div class="space-y-4 text-xs">
-                    <div class="bg-teal-50 p-4 rounded-xl border border-teal-100">
-                        <p class="text-slate-500 font-bold mb-1">PENGAWAS: <span class="text-teal-800 font-black text-sm ml-2">WARIHJATI (Ungaran)</span></p>
-                        <p class="text-slate-500 font-bold">ASISTEN: <span class="text-teal-800 font-black text-sm ml-4">CATUR (Ungaran)</span></p>
+                <div class="space-y-4">
+                    <div class="bg-teal-50 p-4 rounded-lg border border-teal-100">
+                        <p class="text-slate-500 mb-1">PENGAWAS: <span class="text-teal-800 font-black ml-2">WARIHJATI (Ungaran)</span></p>
+                        <p class="text-slate-500">ASISTEN: <span class="text-teal-800 font-black ml-6">CATUR (Ungaran)</span></p>
                     </div>
                     
-                    <div class="bg-white border border-slate-200 p-4 rounded-xl">
+                    <div class="bg-white border border-slate-200 p-4 rounded-lg">
                         <p class="font-bold text-slate-800 mb-3 border-b border-slate-100 pb-2">JADWAL UTAMA</p>
-                        <div class="space-y-3 font-medium text-slate-700">
-                            <div><span class="text-slate-500 w-32 inline-block">Keamanan Pagi</span>: Catur (Ungaran), Paulus (Jogja Utara)</div>
-                            <div><span class="text-slate-500 w-32 inline-block">Keamanan Siang</span>: Warihjati (Ungaran), Paulus (Jogja Utara)</div>
-                        </div>
+                        <table class="w-full text-left border-separate border-spacing-y-2 text-slate-700">
+                            <tr><td class="w-32 align-top text-slate-500">Keamanan Pagi</td><td>: Catur (Ungaran), Paulus (Jogja Utara)</td></tr>
+                            <tr><td class="align-top text-slate-500">Keamanan Siang</td><td>: Warihjati (Ungaran), Paulus (Jogja Utara)</td></tr>
+                        </table>
                     </div>
 
-                    <div class="bg-white border border-slate-200 p-4 rounded-xl">
+                    <div class="bg-white border border-slate-200 p-4 rounded-lg">
                         <p class="font-bold text-slate-800 mb-3 border-b border-slate-100 pb-2">POS PENJAGAAN</p>
-                        <div class="space-y-2 font-medium text-slate-700">
-                            <div><span class="text-slate-500 w-36 inline-block">Jaga Lift Kanan</span>: Simon Prasetyo (Purwokerto)</div>
-                            <div><span class="text-slate-500 w-36 inline-block">Jaga Lift Kiri</span>: Duwi (Ungaran)</div>
+                        <table class="w-full text-left border-separate border-spacing-y-2 text-slate-700">
+                            <tr><td class="w-40 text-slate-500">Jaga Lift Kanan</td><td>: Simon Prasetyo (Purwokerto)</td></tr>
+                            <tr><td class="text-slate-500">Jaga Lift Kiri</td><td>: Duwi (Ungaran)</td></tr>
                             
-                            <div class="pt-3 font-bold text-teal-700">Pintu Depan Pagi:</div>
-                            <div class="pl-4">- Sesi 1 : Eko Budi (Ungaran)</div>
-                            <div class="pl-4">- Sesi 2 : Simon Prasetyo (Purwokerto)</div>
+                            <tr><td colspan="2" class="pt-3 font-bold text-teal-700">Pintu Depan Pagi:</td></tr>
+                            <tr><td class="text-slate-500 pl-4">- Sesi 1</td><td>: Eko Budi (Ungaran)</td></tr>
+                            <tr><td class="text-slate-500 pl-4">- Sesi 2</td><td>: Simon Prasetyo (Purwokerto)</td></tr>
                             
-                            <div class="pt-3 font-bold text-teal-700">Pintu Depan Siang:</div>
-                            <div class="pl-4">- Sesi 1 : Sarastoto (Ungaran)</div>
-                            <div class="pl-4">- Sesi 2 : April Dwi (Ungaran)</div>
+                            <tr><td colspan="2" class="pt-3 font-bold text-teal-700">Pintu Depan Siang:</td></tr>
+                            <tr><td class="text-slate-500 pl-4">- Sesi 1</td><td>: Sarastoto (Ungaran)</td></tr>
+                            <tr><td class="text-slate-500 pl-4">- Sesi 2</td><td>: April Dwi (Ungaran)</td></tr>
                             
-                            <div class="pt-3"><span class="text-slate-500 w-36 inline-block">Pintu Belakang Pagi</span>: Hartono Widagdo (Ungaran)</div>
-                            <div><span class="text-slate-500 w-36 inline-block">Pintu Belakang Siang</span>: Tugiyo (Jogja Selatan)</div>
-                        </div>
+                            <tr><td class="text-slate-500 pt-3">Pintu Belakang Pagi</td><td class="pt-3">: Hartono Widagdo (Ungaran)</td></tr>
+                            <tr><td class="text-slate-500">Pintu Belakang Siang</td><td>: Tugiyo (Jogja Selatan)</td></tr>
+                        </table>
                     </div>
 
-                    <ul class="text-[10px] text-rose-600 font-bold list-disc pl-4 space-y-1.5 pt-2">
+                    <ul class="text-rose-600 font-bold list-disc pl-5 space-y-1.5 pt-2">
                         <li>Penjaga Pintu Depan mengawasi area depan pintu utama dan mengantar hadirin terlambat.</li>
                         <li>Penjaga Pintu Belakang mengawasi area belakang panggung.</li>
                         <li>Pengawas Keamanan mengatur jam sweeping dan memastikan semua area gedung aman.</li>
@@ -199,47 +210,49 @@
             </div>
 
             <!-- KETERTIBAN -->
-            <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm">
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
                 <div class="flex items-center gap-3 mb-4 pb-3 border-b border-slate-100">
-                    <span class="text-2xl">🪑</span><h3 class="font-black text-slate-800 text-base tracking-widest">KETERTIBAN</h3>
+                    <span class="text-2xl">🪑</span><h3 class="font-black text-slate-800 uppercase tracking-widest">Ketertiban</h3>
                 </div>
-                <p class="text-xs text-slate-600 font-medium mb-5 leading-relaxed bg-slate-50 p-4 rounded-xl border border-slate-100">
+                <p class="text-slate-600 mb-5 leading-relaxed bg-slate-50 p-4 rounded-lg border border-slate-100">
                     Bertanggung jawab mengkoordinasi tata letak kursi sesuai layout terbaru, memastikan pemasangan kursi rapi, memberi tanda-tanda, mengorganisasi penjaga blok, dan melaporkan seluruh jumlah hadirin.
                 </p>
-                <div class="space-y-4 text-xs">
-                    <div class="bg-teal-50 p-4 rounded-xl border border-teal-100">
-                        <p class="text-slate-500 font-bold mb-1">PENGAWAS: <span class="text-teal-800 font-black text-sm ml-2">WISNU JATMIKO (Semarang Brt)</span></p>
-                        <p class="text-slate-500 font-bold">ASISTEN: <span class="text-teal-800 font-black text-sm ml-4">LEON (Salatiga)</span></p>
+                <div class="space-y-4">
+                    <div class="bg-teal-50 p-4 rounded-lg border border-teal-100">
+                        <p class="text-slate-500 mb-1">PENGAWAS: <span class="text-teal-800 font-black ml-2">WISNU JATMIKO (Semarang Brt)</span></p>
+                        <p class="text-slate-500">ASISTEN: <span class="text-teal-800 font-black ml-6">LEON (Salatiga)</span></p>
                     </div>
                     
-                    <div class="bg-white border border-slate-200 p-4 rounded-xl">
-                        <div class="space-y-2 font-medium text-slate-700">
-                            <div><span class="text-slate-500 w-32 inline-block">Tanda-Tanda</span>: Andreas Widi (Semarang Timur)</div>
-                            <div><span class="text-slate-500 w-32 inline-block">Hitung Hadirin</span>: Leon (Salatiga)</div>
-                        </div>
+                    <div class="bg-white border border-slate-200 p-4 rounded-lg">
+                        <table class="w-full text-left border-separate border-spacing-y-2 text-slate-700">
+                            <tr><td class="w-36 text-slate-500">Tanda-Tanda</td><td>: Andreas Widi (Semarang Timur)</td></tr>
+                            <tr><td class="text-slate-500">Hitung Hadirin</td><td>: Leon (Salatiga)</td></tr>
+                        </table>
                     </div>
 
-                    <div class="bg-white border border-slate-200 p-4 rounded-xl">
+                    <div class="bg-white border border-slate-200 p-4 rounded-lg">
                         <p class="font-bold text-slate-800 mb-3 border-b border-slate-100 pb-2">PENJAGA BLOK</p>
-                        <div class="space-y-2 font-medium text-slate-700">
-                            <div><span class="text-slate-500 w-20 inline-block font-bold">Blok A</span>: Agung Danar (Jogja Selatan)</div>
-                            <div><span class="text-slate-500 w-20 inline-block font-bold">Blok B</span>: Yanuar (Jogja Selatan)</div>
-                            <div><span class="text-slate-500 w-20 inline-block font-bold">Blok C</span>: Teofilius (Purwokerto)</div>
-                            <div><span class="text-slate-500 w-20 inline-block font-bold">Blok D</span>: Jadi (Jogja Utara)</div>
-                            <div><span class="text-slate-500 w-20 inline-block font-bold">Blok E</span>: Bagus Andreanto (Jogja Selatan)</div>
-                            <div><span class="text-slate-500 w-20 inline-block font-bold">Blok F</span>: Wisnu Jatmiko (Semarang Barat)</div>
-                        </div>
+                        <table class="w-full text-left border-separate border-spacing-y-2 text-slate-700">
+                            <tr><td class="w-24 text-slate-500 font-bold">Blok A</td><td>: Agung Danar (Jogja Selatan)</td></tr>
+                            <tr><td class="text-slate-500 font-bold">Blok B</td><td>: Yanuar (Jogja Selatan)</td></tr>
+                            <tr><td class="text-slate-500 font-bold">Blok C</td><td>: Teofilius (Purwokerto)</td></tr>
+                            <tr><td class="text-slate-500 font-bold">Blok D</td><td>: Jadi (Jogja Utara)</td></tr>
+                            <tr><td class="text-slate-500 font-bold">Blok E</td><td>: Bagus Andreanto (Jogja Selatan)</td></tr>
+                            <tr><td class="text-slate-500 font-bold">Blok F</td><td>: Wisnu Jatmiko (Semarang Barat)</td></tr>
+                            <tr><td class="text-slate-500 font-bold">Blok G</td><td>: Hendrik (Semarang Barat)</td></tr>
+                            <tr><td class="text-slate-500 font-bold">Blok H</td><td>: Eko Heri (Semarang Barat)</td></tr>
+                        </table>
                     </div>
                     
-                    <div class="bg-white border border-slate-200 p-4 rounded-xl">
+                    <div class="bg-white border border-slate-200 p-4 rounded-lg">
                         <p class="font-bold text-slate-800 mb-3 border-b border-slate-100 pb-2">PEMBAWA TANDA ACARA AKAN DIMULAI</p>
-                        <div class="space-y-2 font-medium text-slate-700">
-                            <div><span class="text-slate-500 w-28 inline-block">Dalam Gedung</span>: Kodir (Purwokerto)</div>
-                            <div><span class="text-slate-500 w-28 inline-block">Luar Gedung</span>: Hery Sasongko (Jogja Utara)</div>
-                        </div>
+                        <table class="w-full text-left border-separate border-spacing-y-2 text-slate-700">
+                            <tr><td class="w-32 text-slate-500">Dalam Gedung</td><td>: Kodir (Purwokerto)</td></tr>
+                            <tr><td class="text-slate-500">Luar Gedung</td><td>: Hery Sasongko (Jogja Utara)</td></tr>
+                        </table>
                     </div>
 
-                    <ul class="text-[10px] text-rose-600 font-bold list-disc pl-4 space-y-1.5 pt-2">
+                    <ul class="text-rose-600 font-bold list-disc pl-5 space-y-1.5 pt-2">
                         <li>Penjaga Blok Kursi bertanggung jawab menghitung kursi, kerapian & ketertiban blok yang dijaga.</li>
                         <li>Pembawa tanda acara dimulai area dalam gedung bisa mengitari seluruh area dalam gedung.</li>
                         <li>Pembawa tanda acara dimulai area luar gedung bisa mengitari seluruh area luar gedung.</li>
@@ -248,21 +261,21 @@
             </div>
 
             <!-- HUMAS -->
-            <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm">
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
                 <div class="flex items-center gap-3 mb-4 pb-3 border-b border-slate-100">
-                    <span class="text-2xl">🤝</span><h3 class="font-black text-slate-800 text-base tracking-widest">HUMAS</h3>
+                    <span class="text-2xl">🤝</span><h3 class="font-black text-slate-800 uppercase tracking-widest">Humas</h3>
                 </div>
-                <p class="text-xs text-slate-600 font-medium mb-4 leading-relaxed bg-slate-50 p-4 rounded-xl border border-slate-100">
+                <p class="text-slate-600 mb-4 leading-relaxed bg-slate-50 p-4 rounded-lg border border-slate-100">
                     Bertanggung jawab menemui tamu dan mengatur petugas penerima tamu pagi.
                 </p>
-                <div class="space-y-4 text-xs">
-                    <div class="bg-teal-50 p-4 rounded-xl border border-teal-100">
-                        <p class="text-slate-500 font-bold mb-1">PENGAWAS: <span class="text-teal-800 font-black text-sm ml-2">YUSAK HENDARKO (Semarang Brt)</span></p>
-                        <p class="text-slate-500 font-bold">ASISTEN: <span class="text-teal-800 font-black text-sm ml-4">EKO HERI (Semarang Brt)</span></p>
+                <div class="space-y-4">
+                    <div class="bg-teal-50 p-4 rounded-lg border border-teal-100">
+                        <p class="text-slate-500 font-bold mb-1">PENGAWAS: <span class="text-teal-800 font-black ml-2">YUSAK HENDARKO (Semarang Brt)</span></p>
+                        <p class="text-slate-500 font-bold">ASISTEN: <span class="text-teal-800 font-black ml-6">EKO HERI (Semarang Brt)</span></p>
                     </div>
-                    <div class="bg-white border border-slate-200 p-4 rounded-xl">
+                    <div class="bg-white border border-slate-200 p-4 rounded-lg">
                         <p class="font-bold text-slate-800 mb-2 border-b border-slate-100 pb-2">PENERIMA TAMU</p>
-                        <ul class="font-medium text-slate-700 list-disc pl-5 space-y-1 mt-2">
+                        <ul class="text-slate-700 list-disc pl-5 space-y-1.5 mt-3">
                             <li>Yusak Hendarko (Semarang Barat)</li>
                             <li>Leon (Salatiga)</li>
                             <li>Hendrik (Semarang Barat)</li>
@@ -273,47 +286,51 @@
             </div>
 
             <!-- EVAKUASI -->
-            <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm">
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
                 <div class="flex items-center gap-3 mb-4 pb-3 border-b border-slate-100">
-                    <span class="text-2xl">🗺️</span><h3 class="font-black text-slate-800 text-base tracking-widest">EVAKUASI</h3>
+                    <span class="text-2xl">🗺️</span><h3 class="font-black text-slate-800 uppercase tracking-widest">Evakuasi</h3>
                 </div>
-                <p class="text-xs text-slate-600 font-medium mb-4 leading-relaxed bg-slate-50 p-4 rounded-xl border border-slate-100">
+                <p class="text-slate-600 mb-4 leading-relaxed bg-slate-50 p-4 rounded-lg border border-slate-100">
                     Bertanggung jawab membuat rencana evakuasi, pelatihan & simulasi untuk semua petugas tata tertib.
                 </p>
-                <div class="bg-teal-50 p-4 rounded-xl border border-teal-100 text-xs">
-                    <p class="text-slate-500 font-bold mb-1">PENGAWAS: <span class="text-teal-800 font-black text-sm ml-2">BAGUS ANDREANTO (Jogja Sel)</span></p>
-                    <p class="text-slate-500 font-bold">ASISTEN: <span class="text-teal-800 font-black text-sm ml-4">HENDRIK (Semarang Brt)</span></p>
+                <div class="bg-teal-50 p-4 rounded-lg border border-teal-100 space-y-1">
+                    <p class="text-slate-500 font-bold mb-1">PENGAWAS: <span class="text-teal-800 font-black ml-2">BAGUS ANDREANTO (Jogja Sel)</span></p>
+                    <p class="text-slate-500 font-bold">ASISTEN: <span class="text-teal-800 font-black ml-6">HENDRIK (Semarang Brt)</span></p>
                 </div>
             </div>
 
             <!-- BAPTISAN -->
-            <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm">
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
                 <div class="flex items-center gap-3 mb-4 pb-3 border-b border-slate-100">
-                    <span class="text-2xl">💧</span><h3 class="font-black text-slate-800 text-base tracking-widest">BAPTISAN</h3>
+                    <span class="text-2xl">💧</span><h3 class="font-black text-slate-800 uppercase tracking-widest">Baptisan</h3>
                 </div>
-                <p class="text-xs text-slate-600 font-medium mb-4 leading-relaxed bg-slate-50 p-4 rounded-xl border border-slate-100">
+                <p class="text-slate-600 mb-4 leading-relaxed bg-slate-50 p-4 rounded-lg border border-slate-100">
                     Bertanggung jawab untuk mengatur pembawa tanda-tanda calon baptis, penjaga toilet baptisan, & kolam baptisan.
                 </p>
-                <div class="space-y-4 text-xs">
-                    <div class="bg-teal-50 p-4 rounded-xl border border-teal-100">
-                        <p class="text-slate-500 font-bold mb-1">PENGAWAS: <span class="text-teal-800 font-black text-sm ml-2">GIRI PRASETYO (Jogja Utara)</span></p>
-                        <p class="text-slate-500 font-bold">ASISTEN: <span class="text-teal-800 font-black text-sm ml-4">HERY SASONGKO (Jogja Utara)</span></p>
+                <div class="space-y-4">
+                    <div class="bg-teal-50 p-4 rounded-lg border border-teal-100">
+                        <p class="text-slate-500 font-bold mb-1">PENGAWAS: <span class="text-teal-800 font-black ml-2">GIRI PRASETYO (Jogja Utara)</span></p>
+                        <p class="text-slate-500 font-bold">ASISTEN: <span class="text-teal-800 font-black ml-6">HERY SASONGKO (Jogja Utara)</span></p>
                     </div>
                     
-                    <div class="bg-white border border-slate-200 p-4 rounded-xl">
-                        <div class="space-y-2 font-medium text-slate-700">
-                            <div><span class="text-slate-500 w-36 inline-block">Tanda Calon Baptis</span>: Yansen (Purwokerto)</div>
-                            <div><span class="text-slate-500 w-36 inline-block">Toilet Sdr</span>: Kodir (Purwokerto)</div>
-                            <div><span class="text-slate-500 w-36 inline-block">Toilet Sdri</span>: Slamet Rahayu (Purwokerto)</div>
-                            <div class="pt-3 font-bold text-teal-700 border-t border-slate-100">Penjaga Kolam Baptis:</div>
-                            <ul class="list-disc pl-5 space-y-1">
-                                <li>Hartono Budi (Surabaya)</li>
-                                <li>Sucipto (Surabaya)</li>
-                                <li>Tugiyo (Jogja Selatan)</li>
-                                <li>Duwi (Ungaran)</li>
-                                <li>Yadi (Salatiga)</li>
-                            </ul>
-                        </div>
+                    <div class="bg-white border border-slate-200 p-4 rounded-lg">
+                        <table class="w-full text-left border-separate border-spacing-y-2 text-slate-700">
+                            <tr><td class="w-40 align-top text-slate-500">Tanda Calon Baptis</td><td class="align-top">: Yansen (Purwokerto)</td></tr>
+                            <tr><td class="text-slate-500">Toilet Sdr</td><td>: Kodir (Purwokerto)</td></tr>
+                            <tr><td class="text-slate-500">Toilet Sdri</td><td>: Slamet Rahayu (Purwokerto)</td></tr>
+                            <tr>
+                                <td class="align-top pt-3 text-slate-500">Penjaga Kolam Baptis</td>
+                                <td class="pt-3">
+                                    <ul class="list-disc pl-5 space-y-1">
+                                        <li>Hartono Budi (Surabaya)</li>
+                                        <li>Sucipto (Surabaya)</li>
+                                        <li>Tugiyo (Jogja Selatan)</li>
+                                        <li>Duwi (Ungaran)</li>
+                                        <li>Yadi (Salatiga)</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -325,38 +342,34 @@
     <!-- JAVASCRIPT LOGIC -->
     <!-- ========================================== -->
     <script>
-        // --- MASUKKAN URL API GOOGLE SCRIPT ANDA DI SINI ---
+        // URL API GOOGLE APPS SCRIPT ANDA
         const API_URL = "https://script.google.com/macros/s/AKfycbxsDq-FMNioyTRftAjrsQtATbk36Trgco81fsiMJzUbacRUnj8KduIlJnbZ4_Jw44goUA/exec"; 
         
-        // Pemetaan nama petugas
         const namaPetugas = {
-            'A': 'AGUNG DANAR', 'B': 'YANUAR', 'C': 'TEOFILIUS',
-            'D': 'JADI', 'E': 'BAGUS ANDREANTO', 'F': 'WISNU JATMIKO'
+            'A': 'AGUNG DANAR', 'B': 'YANUAR', 'C': 'TEOFILIUS', 'D': 'JADI', 
+            'E': 'BAGUS ANDREANTO', 'F': 'WISNU JATMIKO', 'G': 'HENDRIK', 'H': 'EKO HERI'
         };
 
         let dbKursi = [];
         let daftarBlok = [];
-        let currentLuarVal = 0; // State untuk area luar
+        let currentLuarVal = 0;
         
+        // Haptic Feedback Helper
+        const haptic = (strength = 30) => { if(navigator.vibrate) navigator.vibrate(strength); }
+
         const showLoading = (show, text="MEMUAT DATA...") => {
             document.getElementById('loading-text').innerText = text;
             document.getElementById('loading').style.display = show ? 'flex' : 'none';
         }
 
-        // Tampilkan Toast Notifikasi
         function showToast(msg, isError = false) {
             const toast = document.getElementById('toast');
             document.getElementById('toast-icon').innerText = isError ? '❌' : '✅';
             document.getElementById('toast-msg').innerText = msg;
-            
             toast.classList.remove('opacity-0');
             toast.classList.add('opacity-100');
-            
-            if(isError) {
-                toast.classList.replace('bg-slate-800', 'bg-rose-600');
-            } else {
-                toast.classList.replace('bg-rose-600', 'bg-slate-800');
-            }
+            if(isError) toast.classList.replace('bg-slate-800', 'bg-rose-600');
+            else toast.classList.replace('bg-rose-600', 'bg-slate-800');
             
             setTimeout(() => {
                 toast.classList.remove('opacity-100');
@@ -395,7 +408,6 @@
             document.getElementById('timestamp').innerText = `Terakhir sinkron: ${new Date().toLocaleDateString('id-ID', options)}`;
         }
 
-        // --- FETCH DATA (DENGAN LOADING SCREEN) ---
         async function loadDataFromAPI(showLoadScreen = true) {
             if(showLoadScreen) showLoading(true);
             try {
@@ -427,7 +439,6 @@
             if(showLoadScreen) showLoading(false);
         }
 
-        // --- RENDER GRID ---
         function initDenah() {
             const container = document.getElementById('grid-container');
             container.innerHTML = "";
@@ -437,8 +448,8 @@
                 return;
             }
 
-            // Filter agar hanya memunculkan A-F sesuai permintaan terakhir
-            const validBlocks = daftarBlok.filter(b => ['A','B','C','D','E','F'].includes(b)).sort();
+            // Memastikan memuat A-H
+            const validBlocks = daftarBlok.filter(b => ['A','B','C','D','E','F','G','H'].includes(b)).sort();
 
             validBlocks.forEach(blok => {
                 const blokData = dbKursi.filter(s => s.blok === blok);
@@ -502,7 +513,7 @@
                             btn.innerText = num.toString().padStart(2, '0');
                             
                             btn.onclick = () => {
-                                // 1. Optimistic Update (Instan di HP)
+                                haptic(30); // Getar saat tap kursi
                                 const newStatus = kursi.status === "Kosong" ? "Terisi" : "Kosong";
                                 kursi.status = newStatus; 
                                 
@@ -511,20 +522,13 @@
                                 let count = parseInt(document.getElementById(`count-${blok}`).innerText);
                                 document.getElementById(`count-${blok}`).innerText = newStatus === "Terisi" ? count + 1 : count - 1;
                                 
-                                // Getar Instan
-                                if (navigator.vibrate) navigator.vibrate(50);
-                                
-                                // 2. Background Sync (Tanpa Loading Screen)
                                 apiPost({ action: 'updateKursi', id_kursi: kursi.id_kursi, status_baru: newStatus })
                                 .then(() => {
-                                    showToast("Data Tersimpan");
-                                    // Update counter di dashboard
                                     let currentDash = parseInt(document.getElementById('dash-kursi').innerText);
                                     let currentTotal = parseInt(document.getElementById('dash-total').innerText);
                                     document.getElementById('dash-kursi').innerText = newStatus === "Terisi" ? currentDash + 1 : currentDash - 1;
                                     document.getElementById('dash-total').innerText = newStatus === "Terisi" ? currentTotal + 1 : currentTotal - 1;
-                                })
-                                .catch(() => showToast("Koneksi Gagal!", true));
+                                }).catch(() => showToast("Koneksi Gagal!", true));
                             };
                             grid.appendChild(btn);
                         } else {
@@ -532,7 +536,6 @@
                         }
                     }
                 }
-                
                 contentDiv.appendChild(grid);
                 blockDiv.innerHTML = headerHtml;
                 blockDiv.appendChild(contentDiv);
@@ -552,48 +555,55 @@
             }
         }
 
-        // --- KONTROL AREA LUAR (TOMBOL PLUS MINUS) ---
+        // --- KONTROL AREA LUAR ---
         function ubahAreaLuar(amount) {
             let newVal = currentLuarVal + amount;
-            if(newVal < 0) newVal = 0; // Tidak boleh minus
+            if(newVal < 0) newVal = 0; 
             
             currentLuarVal = newVal;
             document.getElementById('display-luar').innerText = currentLuarVal;
-            
-            // Efek Getar HP (Haptic Feedback)
-            if (navigator.vibrate) {
-                if(amount > 0) navigator.vibrate(50); // Getar pendek utk Plus
-                else navigator.vibrate([30, 50, 30]); // Getar beda utk Minus
-            }
         }
 
         async function syncLuarToAPI() {
+            haptic(40);
             const btn = document.getElementById('btn-sync-luar');
             btn.innerText = "MENYIMPAN...";
             btn.classList.add('opacity-50');
             
             try {
                 await apiPost({ action: 'updateLuar', jumlah: currentLuarVal });
-                // Update dashboard counter
                 document.getElementById('dash-luar').innerText = currentLuarVal;
                 let currentKursi = parseInt(document.getElementById('dash-kursi').innerText);
                 document.getElementById('dash-total').innerText = currentKursi + currentLuarVal;
                 
                 showToast("Data Tersimpan");
                 stampTime();
-            } catch(e) {
-                showToast("Gagal Menyimpan", true);
-            }
+            } catch(e) { showToast("Gagal Menyimpan", true); }
             
             btn.innerText = "SIMPAN KE DATABASE";
             btn.classList.remove('opacity-50');
         }
 
-        // --- FITUR ADMIN (HANYA BISA DIAKSES JIKA TAHU PASSWORD) ---
+        // --- FUNGSI ZOOM TEKS JADWAL TUGAS ---
+        function zoomText(change) {
+            haptic(20);
+            const root = document.documentElement;
+            // Ambil computed value dari var(--base-font-size)
+            let currentSize = parseInt(getComputedStyle(root).getPropertyValue('--base-font-size'));
+            if(isNaN(currentSize)) currentSize = 14; // Default
+            
+            let newSize = currentSize + change;
+            // Batasi min/max zoom
+            if(newSize >= 10 && newSize <= 22) {
+                root.style.setProperty('--base-font-size', `${newSize}px`);
+            }
+        }
+
+        // --- FITUR ADMIN ---
         async function bukaMenuAdmin() {
             const sandi = prompt("Masukkan Sandi Administrator:");
             if (sandi === "admin") {
-                const aksi = prompt("MENU ADMIN:\nKetik '1' untuk Reset Semua Kursi ke Kosong\nKetik '2' untuk Generate Formasi Blok A-D (13x11) & E-F (13x6)");
+                const aksi = prompt("MENU ADMIN:\nKetik '1' untuk Reset Semua Kursi ke Kosong\nKetik '2' untuk Generate Formasi Blok A-D (13x11) & E-H (13x6)");
                 if (aksi === "1") {
                     if(confirm("Yakin mereset seluruh data kursi di Spreadsheet menjadi KOSONG?")) {
                         showLoading(true, "MERESET DATABASE...");
@@ -603,7 +613,7 @@
                         alert("Data kursi berhasil dikosongkan.");
                     }
                 } else if (aksi === "2") {
-                    if(confirm("Data denah lama akan TERHAPUS dan diganti formasi A-F. Lanjut?")) {
+                    if(confirm("Data denah lama akan TERHAPUS dan diganti formasi A-H. Lanjut?")) {
                         showLoading(true, "MEMBUAT FORMASI BARU...");
                         await apiPost({ action: 'generateFormasiBaru' });
                         await loadDataFromAPI(false);
@@ -611,9 +621,7 @@
                         alert("Formasi baru berhasil dibuat!");
                     }
                 }
-            } else if (sandi !== null) {
-                alert("Sandi salah.");
-            }
+            } else if (sandi !== null) { alert("Sandi salah."); }
         }
 
         window.onload = () => loadDataFromAPI(true);
