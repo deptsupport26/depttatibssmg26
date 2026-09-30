@@ -21,7 +21,6 @@
         
         #toast { transition: opacity 0.3s ease; }
         
-        /* Variabel CSS untuk dinamis font size di halaman Jadwal Tugas */
         :root { --base-font-size: 14px; }
         .zoomable-text { font-size: var(--base-font-size); }
         .zoomable-text h3 { font-size: calc(var(--base-font-size) * 1.25); }
@@ -51,13 +50,11 @@
         
         <div class="flex items-center gap-2">
             <button onclick="loadDataFromAPI(true)" class="text-xl active:scale-95 transition bg-slate-50 p-2 rounded-full" title="Refresh Data">🔄</button>
-            <button onclick="bukaMenuAdmin()" id="btn-admin" class="text-xl active:scale-95 transition grayscale opacity-50 hover:grayscale-0 hover:opacity-100 p-2">⚙️️</button>
+            <button onclick="bukaMenuAdmin()" id="btn-admin" class="text-xl active:scale-95 transition grayscale opacity-50 hover:grayscale-0 hover:opacity-100 p-2">⚙️</button>
         </div>
     </div>
 
-    <!-- ========================================== -->
     <!-- 1. DASHBOARD UTAMA -->
-    <!-- ========================================== -->
     <div id="page-dashboard" class="app-page is-visible">
         <div class="bg-slate-900 pt-8 pb-12 px-6 rounded-b-[2rem] shadow-md text-center relative mb-8">
             <h2 class="text-2xl font-black text-white mb-1">Status Kehadiran</h2>
@@ -67,7 +64,6 @@
         </div>
 
         <div class="px-5 space-y-5 -mt-10 relative z-10 max-w-2xl mx-auto">
-            <!-- STATISTIK -->
             <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200 text-center">
                 <p class="text-[10px] font-bold text-slate-400 tracking-widest mb-1">TOTAL HADIRIN</p>
                 <div class="text-7xl font-black text-slate-800 mb-2" id="dash-total">0</div>
@@ -77,7 +73,6 @@
                 </div>
             </div>
 
-            <!-- MENU UTAMA -->
             <div class="grid grid-cols-2 gap-3">
                 <button onclick="navigate('page-denah')" class="p-5 rounded-3xl flex flex-col justify-center items-center text-center shadow-sm border border-slate-200 bg-white active:scale-95 transition">
                     <div class="text-4xl mb-2">🪑</div>
@@ -91,7 +86,6 @@
                 </button>
             </div>
 
-            <!-- JADWAL TUGAS -->
             <button onclick="navigate('page-tugas')" class="w-full flex items-center justify-between p-5 mt-2 bg-gradient-to-r from-teal-600 to-emerald-600 text-white rounded-3xl shadow-md shadow-teal-500/30 active:scale-95 transition">
                 <div class="flex items-center gap-4">
                     <div class="text-3xl">📋</div>
@@ -105,17 +99,13 @@
         </div>
     </div>
 
-    <!-- ========================================== -->
     <!-- 2. DENAH KURSI -->
-    <!-- ========================================== -->
     <div id="page-denah" class="app-page px-4 pt-6 pb-20">
         <div class="max-w-2xl mx-auto w-full bg-slate-800 text-center py-4 rounded-xl font-black text-white tracking-[0.4em] mb-6 text-[10px] shadow-md">PANGGUNG UTAMA</div>
         <div id="grid-container" class="space-y-4 max-w-4xl mx-auto"></div>
     </div>
 
-    <!-- ========================================== -->
     <!-- 3. AREA LUAR BLOK -->
-    <!-- ========================================== -->
     <div id="page-luar" class="app-page px-5 pt-8 pb-20 max-w-2xl mx-auto">
         <div class="bg-indigo-50 border border-indigo-200 p-4 rounded-2xl mb-6 flex gap-3 items-start shadow-sm">
             <span class="text-xl">💡</span>
@@ -126,14 +116,10 @@
             <div class="font-black text-slate-400 text-xs tracking-widest mb-4">TOTAL HADIRIN LUAR BLOK</div>
             
             <div class="flex items-center justify-center gap-6 mb-6">
-                <!-- Tombol Minus -->
                 <button onclick="ubahAreaLuar(-1); if(navigator.vibrate) navigator.vibrate([30, 50, 30]);" class="w-16 h-16 rounded-full bg-slate-100 border border-slate-200 text-3xl font-black text-slate-600 active:scale-90 active:bg-rose-100 active:text-rose-600 transition shadow-sm select-none touch-manipulation">
                     -
                 </button>
-                
                 <div class="text-6xl font-black text-slate-800 w-24" id="display-luar">0</div>
-                
-                <!-- Tombol Plus -->
                 <button onclick="ubahAreaLuar(1); if(navigator.vibrate) navigator.vibrate(50);" class="w-16 h-16 rounded-full bg-teal-50 border border-teal-200 text-3xl font-black text-teal-600 active:scale-90 active:bg-teal-500 active:text-white transition shadow-sm select-none touch-manipulation">
                     +
                 </button>
@@ -143,13 +129,10 @@
         </div>
     </div>
 
-    <!-- ========================================== -->
     <!-- 4. JADWAL TUGAS -->
-    <!-- ========================================== -->
     <div id="page-tugas" class="app-page px-4 md:px-5 pt-6 pb-20 max-w-3xl mx-auto zoomable-text">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-xl font-black text-slate-800 uppercase tracking-widest">Daftar Penugasan</h2>
-            <!-- Zoom Controls -->
             <div class="flex gap-1">
                 <button onclick="zoomText(-2)" class="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-200 text-slate-700 font-bold active:bg-slate-300">A-</button>
                 <button onclick="zoomText(2)" class="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-200 text-slate-700 font-bold active:bg-slate-300">A+</button>
@@ -157,7 +140,6 @@
         </div>
         
         <div class="space-y-6">
-            <!-- KEAMANAN -->
             <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
                 <div class="flex items-center gap-3 mb-4 pb-3 border-b border-slate-100">
                     <span class="text-2xl">🛡️</span><h3 class="font-black text-slate-800 uppercase tracking-widest">Keamanan</h3>
@@ -335,11 +317,8 @@
         </div>
     </div>
 
-    <!-- ========================================== -->
     <!-- JAVASCRIPT LOGIC -->
-    <!-- ========================================== -->
     <script>
-        // URL API GOOGLE APPS SCRIPT
         const API_URL = "https://script.google.com/macros/s/AKfycbxsDq-FMNioyTRftAjrsQtATbk36Trgco81fsiMJzUbacRUnj8KduIlJnbZ4_Jw44goUA/exec"; 
         
         const namaPetugas = {
@@ -469,7 +448,6 @@
 
                 const contentDiv = document.createElement('div');
                 contentDiv.id = `content-${blok}`;
-                // PERBAIKAN: Mengurangi padding agar meminimalisir kepenuhan layar di HP
                 contentDiv.className = "collapsible-content p-2 md:p-4";
                 
                 const maxKolom = Math.max(...blokData.map(s => s.kolom));
@@ -477,7 +455,6 @@
 
                 const grid = document.createElement('div');
                 grid.style.display = "grid";
-                // PERBAIKAN: Menghapus batas piksel tetap minmax(32px) agar 100% mengikuti lebar layar
                 grid.style.gridTemplateColumns = `16px repeat(${maxKolom}, minmax(0, 1fr))`;
                 grid.className = "gap-0.5 sm:gap-1 items-center justify-items-center w-full pb-2";
 
@@ -503,7 +480,6 @@
                             let num = ((r - 1) * maxKolom) + c;
                             
                             const btn = document.createElement('button');
-                            // PERBAIKAN: Ukuran font fleksibel untuk mencegah angka ratusan terpotong
                             btn.className = `w-full aspect-square rounded-[4px] sm:rounded-md flex justify-center items-center text-[7px] sm:text-[9px] md:text-xs font-black transition-transform active:scale-75 ${isKosong ? 'seat-green' : 'seat-red'}`;
                             btn.innerText = num.toString().padStart(2, '0');
                             
@@ -551,11 +527,9 @@
             }
         }
 
-        // --- KONTROL AREA LUAR ---
         function ubahAreaLuar(amount) {
             let newVal = currentLuarVal + amount;
             if(newVal < 0) newVal = 0; 
-            
             currentLuarVal = newVal;
             document.getElementById('display-luar').innerText = currentLuarVal;
         }
@@ -580,7 +554,6 @@
             btn.classList.remove('opacity-50');
         }
 
-        // --- FUNGSI ZOOM TEKS JADWAL TUGAS ---
         function zoomText(change) {
             haptic(20);
             const root = document.documentElement;
@@ -593,11 +566,10 @@
             }
         }
 
-        // --- FITUR ADMIN ---
         async function bukaMenuAdmin() {
             const sandi = prompt("Masukkan Sandi Administrator:");
             if (sandi === "admin") {
-                const aksi = prompt("MENU ADMIN:\nKetik '1' untuk Reset Semua Kursi ke Kosong\nKetik '2' untuk Generate Formasi Blok A-D (13x11) & E-H (13x6)");
+                const aksi = prompt("MENU ADMIN:\nKetik '1' untuk Reset Semua Kursi ke Kosong\nKetik '2' untuk Generate Formasi Blok A-D (13 Kolom x 11 Baris) & E-H (13 Kolom x 6 Baris)");
                 if (aksi === "1") {
                     if(confirm("Yakin mereset seluruh data kursi di Spreadsheet menjadi KOSONG?")) {
                         showLoading(true, "MERESET DATABASE...");
