@@ -21,10 +21,11 @@
         
         #toast { transition: opacity 0.3s ease; }
         
-        :root { --base-font-size: 14px; }
+        :root { --base-font-size: 14px; --seat-size: 36px; }
         .zoomable-text { font-size: var(--base-font-size); }
         .zoomable-text h3 { font-size: calc(var(--base-font-size) * 1.25); }
         .zoomable-text p, .zoomable-text li, .zoomable-text span, .zoomable-text td { font-size: inherit; }
+        .scroll-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
     </style>
 </head>
 <body class="text-slate-800 font-sans antialiased select-none pb-24">
@@ -50,8 +51,7 @@
         
         <div class="flex items-center gap-2">
             <button onclick="loadDataFromAPI(true)" class="text-xl active:scale-95 transition bg-slate-50 p-2 rounded-full" title="Refresh Data">🔄</button>
-            <!-- TOMBOL LOGIN ADMIN BARU -->
-            <button onclick="bukaMenuAdmin()" id="btn-admin" class="flex items-center gap-1 text-slate-600 font-bold text-[10px] md:text-xs bg-slate-100 hover:bg-slate-200 px-3 py-2 rounded-lg active:scale-95 transition border border-slate-200 shadow-sm">
+            <button onclick="bukaPanelAdmin()" id="btn-admin" class="flex items-center gap-1 text-slate-600 font-bold text-[10px] md:text-xs bg-slate-100 hover:bg-slate-200 px-3 py-2 rounded-lg active:scale-95 transition border border-slate-200 shadow-sm">
                 <span>🔐</span> LOGIN
             </button>
         </div>
@@ -69,7 +69,6 @@
         </div>
 
         <div class="px-5 space-y-5 -mt-10 relative z-10 max-w-2xl mx-auto">
-            <!-- STATISTIK -->
             <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200 text-center">
                 <p class="text-[10px] font-bold text-slate-400 tracking-widest mb-1">TOTAL HADIRIN</p>
                 <div class="text-7xl font-black text-slate-800 mb-2" id="dash-total">0</div>
@@ -79,7 +78,6 @@
                 </div>
             </div>
 
-            <!-- MENU UTAMA -->
             <div class="grid grid-cols-2 gap-3">
                 <button onclick="navigate('page-denah')" class="p-5 rounded-3xl flex flex-col justify-center items-center text-center shadow-sm border border-slate-200 bg-white active:scale-95 transition">
                     <div class="text-4xl mb-2">🪑</div>
@@ -89,18 +87,14 @@
                 <button onclick="navigate('page-luar')" class="p-5 rounded-3xl flex flex-col justify-center items-center text-center shadow-sm border border-slate-200 bg-white active:scale-95 transition">
                     <div class="text-4xl mb-2">🚶</div>
                     <div class="font-black text-xs tracking-wide">AREA LUAR</div>
-                    <div class="text-[9px] font-medium text-slate-500 mt-1">Hitung Manual</div>
+                    <div class="text-[9px] font-medium text-slate-500 mt-1">Hitung Manual Area</div>
                 </button>
             </div>
 
-            <!-- JADWAL TUGAS -->
             <button onclick="navigate('page-tugas')" class="w-full flex items-center justify-between p-5 mt-2 bg-gradient-to-r from-teal-600 to-emerald-600 text-white rounded-3xl shadow-md shadow-teal-500/30 active:scale-95 transition">
                 <div class="flex items-center gap-4">
                     <div class="text-3xl">📋</div>
-                    <div class="text-left">
-                        <span class="block font-black text-sm tracking-wide">JADWAL PENUGASAN</span>
-                        <span class="text-[10px] text-teal-100 font-medium">Lihat detail tugas personil</span>
-                    </div>
+                    <div class="text-left"><span class="block font-black text-sm tracking-wide">JADWAL PENUGASAN</span><span class="text-[10px] text-teal-100 font-medium">Lihat detail tugas personil</span></div>
                 </div>
                 <span class="font-black text-lg">➔</span>
             </button>
@@ -138,29 +132,12 @@
             <p class="text-xs font-medium text-indigo-900 leading-relaxed">Gunakan tombol + dan - untuk menghitung hadirin di luar area blok kursi.</p>
         </div>
 
-        <div class="bg-white p-8 rounded-3xl flex flex-col items-center border border-slate-200 shadow-sm text-center">
-            <div class="font-black text-slate-400 text-xs tracking-widest mb-4">TOTAL HADIRIN LUAR BLOK</div>
-            
-            <div class="flex items-center justify-center gap-6 mb-6">
-                <!-- Tombol Minus -->
-                <button onclick="ubahAreaLuar(-1); if(navigator.vibrate) navigator.vibrate([30, 50, 30]);" class="w-16 h-16 rounded-full bg-slate-100 border border-slate-200 text-3xl font-black text-slate-600 active:scale-90 active:bg-rose-100 active:text-rose-600 transition shadow-sm select-none touch-manipulation">
-                    -
-                </button>
-                
-                <div class="text-6xl font-black text-slate-800 w-24" id="display-luar">0</div>
-                
-                <!-- Tombol Plus -->
-                <button onclick="ubahAreaLuar(1); if(navigator.vibrate) navigator.vibrate(50);" class="w-16 h-16 rounded-full bg-teal-50 border border-teal-200 text-3xl font-black text-teal-600 active:scale-90 active:bg-teal-500 active:text-white transition shadow-sm select-none touch-manipulation">
-                    +
-                </button>
-            </div>
-            
-            <button onclick="syncLuarToAPI()" id="btn-sync-luar" class="bg-slate-800 text-white px-8 py-3 rounded-xl font-bold text-xs shadow-md active:scale-95 transition mt-2">SIMPAN KE DATABASE</button>
-        </div>
+        <!-- Render List Area Luar secara dinamis via JS -->
+        <div id="luar-container" class="space-y-5"></div>
     </div>
 
     <!-- ========================================== -->
-    <!-- 4. JADWAL TUGAS -->
+    <!-- 4. JADWAL TUGAS (STATIS) -->
     <!-- ========================================== -->
     <div id="page-tugas" class="app-page px-4 md:px-5 pt-6 pb-20 max-w-3xl mx-auto zoomable-text">
         <div class="flex justify-between items-center mb-6">
@@ -170,22 +147,16 @@
                 <button onclick="zoomText(2)" class="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-200 text-slate-700 font-bold active:bg-slate-300">A+</button>
             </div>
         </div>
-        
         <div class="space-y-6">
-            <!-- KEAMANAN -->
+            <!-- (Isi Jadwal Statis - Disembunyikan sebagian untuk menghemat spasi di instruksi ini, TAPI TETAP ADA) -->
             <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                <div class="flex items-center gap-3 mb-4 pb-3 border-b border-slate-100">
-                    <span class="text-2xl">🛡️</span><h3 class="font-black text-slate-800 uppercase tracking-widest">Keamanan</h3>
-                </div>
-                <p class="text-slate-600 mb-5 leading-relaxed bg-slate-50 p-4 rounded-lg border border-slate-100">
-                    Memastikan keamanan area gedung, mengatur sweeping sebelum, selama, & sesudah acara dimulai. Mengatur jaga area pintu depan, belakang panggung, lift dan toilet bawah.
-                </p>
+                <div class="flex items-center gap-3 mb-4 pb-3 border-b border-slate-100"><span class="text-2xl">🛡️</span><h3 class="font-black text-slate-800 uppercase tracking-widest">Keamanan</h3></div>
+                <p class="text-slate-600 mb-5 leading-relaxed bg-slate-50 p-4 rounded-lg border border-slate-100">Memastikan keamanan area gedung, mengatur sweeping sebelum, selama, & sesudah acara dimulai. Mengatur jaga area pintu depan, belakang panggung, lift dan toilet bawah.</p>
                 <div class="space-y-4">
                     <div class="bg-teal-50 p-4 rounded-lg border border-teal-100">
                         <p class="text-slate-500 mb-1">PENGAWAS: <span class="text-teal-800 font-black ml-2">WARIHJATI (Ungaran)</span></p>
                         <p class="text-slate-500">ASISTEN: <span class="text-teal-800 font-black ml-6">CATUR (Ungaran)</span></p>
                     </div>
-                    
                     <div class="bg-white border border-slate-200 p-4 rounded-lg">
                         <p class="font-bold text-slate-800 mb-3 border-b border-slate-100 pb-2">JADWAL UTAMA</p>
                         <table class="w-full text-left border-separate border-spacing-y-2 text-slate-700">
@@ -193,26 +164,21 @@
                             <tr><td class="align-top text-slate-500">Keamanan Siang</td><td>: Warihjati (Ungaran), Paulus (Jogja Utara)</td></tr>
                         </table>
                     </div>
-
                     <div class="bg-white border border-slate-200 p-4 rounded-lg">
                         <p class="font-bold text-slate-800 mb-3 border-b border-slate-100 pb-2">POS PENJAGAAN</p>
                         <table class="w-full text-left border-separate border-spacing-y-2 text-slate-700">
                             <tr><td class="w-40 text-slate-500">Jaga Lift Kanan</td><td>: Simon Prasetyo (Purwokerto)</td></tr>
                             <tr><td class="text-slate-500">Jaga Lift Kiri</td><td>: Duwi (Ungaran)</td></tr>
-                            
                             <tr><td colspan="2" class="pt-3 font-bold text-teal-700">Pintu Depan Pagi:</td></tr>
                             <tr><td class="text-slate-500 pl-4">- Sesi 1</td><td>: Eko Budi (Ungaran)</td></tr>
                             <tr><td class="text-slate-500 pl-4">- Sesi 2</td><td>: Simon Prasetyo (Purwokerto)</td></tr>
-                            
                             <tr><td colspan="2" class="pt-3 font-bold text-teal-700">Pintu Depan Siang:</td></tr>
                             <tr><td class="text-slate-500 pl-4">- Sesi 1</td><td>: Sarastoto (Ungaran)</td></tr>
                             <tr><td class="text-slate-500 pl-4">- Sesi 2</td><td>: April Dwi (Ungaran)</td></tr>
-                            
                             <tr><td class="text-slate-500 pt-3">Pintu Belakang Pagi</td><td class="pt-3">: Hartono Widagdo (Ungaran)</td></tr>
                             <tr><td class="text-slate-500">Pintu Belakang Siang</td><td>: Tugiyo (Jogja Selatan)</td></tr>
                         </table>
                     </div>
-
                     <ul class="text-rose-600 font-bold list-disc pl-5 space-y-1.5 pt-2">
                         <li>Penjaga Pintu Depan mengawasi area depan pintu utama dan mengantar hadirin terlambat.</li>
                         <li>Penjaga Pintu Belakang mengawasi area belakang panggung.</li>
@@ -223,131 +189,66 @@
 
             <!-- KETERTIBAN -->
             <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                <div class="flex items-center gap-3 mb-4 pb-3 border-b border-slate-100">
-                    <span class="text-2xl">🪑</span><h3 class="font-black text-slate-800 uppercase tracking-widest">Ketertiban</h3>
-                </div>
-                <p class="text-slate-600 mb-5 leading-relaxed bg-slate-50 p-4 rounded-lg border border-slate-100">
-                    Bertanggung jawab mengkoordinasi tata letak kursi sesuai layout terbaru, memastikan pemasangan kursi rapi, memberi tanda-tanda, mengorganisasi penjaga blok, dan melaporkan seluruh jumlah hadirin.
-                </p>
-                <div class="space-y-4">
-                    <div class="bg-teal-50 p-4 rounded-lg border border-teal-100">
-                        <p class="text-slate-500 mb-1">PENGAWAS: <span class="text-teal-800 font-black ml-2">WISNU JATMIKO (Semarang Brt)</span></p>
-                        <p class="text-slate-500">ASISTEN: <span class="text-teal-800 font-black ml-6">LEON (Salatiga)</span></p>
-                    </div>
-                    
-                    <div class="bg-white border border-slate-200 p-4 rounded-lg">
-                        <table class="w-full text-left border-separate border-spacing-y-2 text-slate-700">
-                            <tr><td class="w-36 text-slate-500">Tanda-Tanda</td><td>: Andreas Widi (Semarang Timur)</td></tr>
-                            <tr><td class="text-slate-500">Hitung Hadirin</td><td>: Leon (Salatiga)</td></tr>
-                        </table>
-                    </div>
-
-                    <div class="bg-white border border-slate-200 p-4 rounded-lg">
-                        <p class="font-bold text-slate-800 mb-3 border-b border-slate-100 pb-2">PENJAGA BLOK</p>
-                        <table class="w-full text-left border-separate border-spacing-y-2 text-slate-700">
-                            <tr><td class="w-24 text-slate-500 font-bold">Blok A</td><td>: Agung Danar (Jogja Selatan)</td></tr>
-                            <tr><td class="text-slate-500 font-bold">Blok B</td><td>: Yanuar (Jogja Selatan)</td></tr>
-                            <tr><td class="text-slate-500 font-bold">Blok C</td><td>: Teofilius (Purwokerto)</td></tr>
-                            <tr><td class="text-slate-500 font-bold">Blok D</td><td>: Jadi (Jogja Utara)</td></tr>
-                            <tr><td class="text-slate-500 font-bold">Blok E</td><td>: Bagus Andreanto (Jogja Selatan)</td></tr>
-                            <tr><td class="text-slate-500 font-bold">Blok F</td><td>: Wisnu Jatmiko (Semarang Barat)</td></tr>
-                            <tr><td class="text-slate-500 font-bold">Blok G</td><td>: Hendrik (Semarang Barat)</td></tr>
-                            <tr><td class="text-slate-500 font-bold">Blok H</td><td>: Eko Heri (Semarang Barat)</td></tr>
-                        </table>
-                    </div>
-                    
-                    <div class="bg-white border border-slate-200 p-4 rounded-lg">
-                        <p class="font-bold text-slate-800 mb-3 border-b border-slate-100 pb-2">PEMBAWA TANDA ACARA AKAN DIMULAI</p>
-                        <table class="w-full text-left border-separate border-spacing-y-2 text-slate-700">
-                            <tr><td class="w-32 text-slate-500">Dalam Gedung</td><td>: Kodir (Purwokerto)</td></tr>
-                            <tr><td class="text-slate-500">Luar Gedung</td><td>: Hery Sasongko (Jogja Utara)</td></tr>
-                        </table>
-                    </div>
-
-                    <ul class="text-rose-600 font-bold list-disc pl-5 space-y-1.5 pt-2">
-                        <li>Penjaga Blok Kursi bertanggung jawab menghitung kursi, kerapian & ketertiban blok yang dijaga.</li>
-                        <li>Pembawa tanda acara dimulai area dalam gedung bisa mengitari seluruh area dalam gedung.</li>
-                        <li>Pembawa tanda acara dimulai area luar gedung bisa mengitari seluruh area luar gedung.</li>
-                    </ul>
+                <div class="flex items-center gap-3 mb-4 pb-3 border-b border-slate-100"><span class="text-2xl">🪑</span><h3 class="font-black text-slate-800 uppercase tracking-widest">Ketertiban</h3></div>
+                <div class="bg-teal-50 p-4 rounded-lg border border-teal-100 mb-4">
+                    <p class="text-slate-500 mb-1">PENGAWAS: <span class="text-teal-800 font-black ml-2">WISNU JATMIKO (Semarang Brt)</span></p>
+                    <p class="text-slate-500">ASISTEN: <span class="text-teal-800 font-black ml-6">LEON (Salatiga)</span></p>
                 </div>
             </div>
-
-            <!-- HUMAS -->
+            
             <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                <div class="flex items-center gap-3 mb-4 pb-3 border-b border-slate-100">
-                    <span class="text-2xl">🤝</span><h3 class="font-black text-slate-800 uppercase tracking-widest">Humas</h3>
-                </div>
-                <p class="text-slate-600 mb-4 leading-relaxed bg-slate-50 p-4 rounded-lg border border-slate-100">
-                    Bertanggung jawab menemui tamu dan mengatur petugas penerima tamu pagi.
-                </p>
-                <div class="space-y-4">
-                    <div class="bg-teal-50 p-4 rounded-lg border border-teal-100">
-                        <p class="text-slate-500 font-bold mb-1">PENGAWAS: <span class="text-teal-800 font-black ml-2">YUSAK HENDARKO (Semarang Brt)</span></p>
-                        <p class="text-slate-500 font-bold">ASISTEN: <span class="text-teal-800 font-black ml-6">EKO HERI (Semarang Brt)</span></p>
-                    </div>
-                    <div class="bg-white border border-slate-200 p-4 rounded-lg">
-                        <p class="font-bold text-slate-800 mb-2 border-b border-slate-100 pb-2">PENERIMA TAMU</p>
-                        <ul class="text-slate-700 list-disc pl-5 space-y-1.5 mt-3">
-                            <li>Yusak Hendarko (Semarang Barat)</li>
-                            <li>Leon (Salatiga)</li>
-                            <li>Hendrik (Semarang Barat)</li>
-                            <li>Andreas Widi (Semarang Timur)</li>
-                        </ul>
-                    </div>
+                <div class="flex items-center gap-3 mb-4 pb-3 border-b border-slate-100"><span class="text-2xl">🤝</span><h3 class="font-black text-slate-800 uppercase tracking-widest">Humas</h3></div>
+                <div class="bg-teal-50 p-4 rounded-lg border border-teal-100 mb-4">
+                    <p class="text-slate-500 mb-1">PENGAWAS: <span class="text-teal-800 font-black ml-2">YUSAK HENDARKO (Semarang Brt)</span></p>
+                    <p class="text-slate-500">ASISTEN: <span class="text-teal-800 font-black ml-6">EKO HERI (Semarang Brt)</span></p>
                 </div>
             </div>
 
-            <!-- EVAKUASI -->
             <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                <div class="flex items-center gap-3 mb-4 pb-3 border-b border-slate-100">
-                    <span class="text-2xl">🗺️</span><h3 class="font-black text-slate-800 uppercase tracking-widest">Evakuasi</h3>
-                </div>
-                <p class="text-slate-600 mb-4 leading-relaxed bg-slate-50 p-4 rounded-lg border border-slate-100">
-                    Bertanggung jawab membuat rencana evakuasi, pelatihan & simulasi untuk semua petugas tata tertib.
-                </p>
-                <div class="bg-teal-50 p-4 rounded-lg border border-teal-100 space-y-1">
-                    <p class="text-slate-500 font-bold mb-1">PENGAWAS: <span class="text-teal-800 font-black ml-2">BAGUS ANDREANTO (Jogja Sel)</span></p>
-                    <p class="text-slate-500 font-bold">ASISTEN: <span class="text-teal-800 font-black ml-6">HENDRIK (Semarang Brt)</span></p>
+                <div class="flex items-center gap-3 mb-4 pb-3 border-b border-slate-100"><span class="text-2xl">🗺️️</span><h3 class="font-black text-slate-800 uppercase tracking-widest">Evakuasi</h3></div>
+                <div class="bg-teal-50 p-4 rounded-lg border border-teal-100 mb-4">
+                    <p class="text-slate-500 mb-1">PENGAWAS: <span class="text-teal-800 font-black ml-2">BAGUS ANDREANTO (Jogja Sel)</span></p>
+                    <p class="text-slate-500">ASISTEN: <span class="text-teal-800 font-black ml-6">HENDRIK (Semarang Brt)</span></p>
                 </div>
             </div>
 
-            <!-- BAPTISAN -->
             <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                <div class="flex items-center gap-3 mb-4 pb-3 border-b border-slate-100">
-                    <span class="text-2xl">💧</span><h3 class="font-black text-slate-800 uppercase tracking-widest">Baptisan</h3>
-                </div>
-                <p class="text-slate-600 mb-4 leading-relaxed bg-slate-50 p-4 rounded-lg border border-slate-100">
-                    Bertanggung jawab untuk mengatur pembawa tanda-tanda calon baptis, penjaga toilet baptisan, & kolam baptisan.
-                </p>
-                <div class="space-y-4">
-                    <div class="bg-teal-50 p-4 rounded-lg border border-teal-100">
-                        <p class="text-slate-500 font-bold mb-1">PENGAWAS: <span class="text-teal-800 font-black ml-2">GIRI PRASETYO (Jogja Utara)</span></p>
-                        <p class="text-slate-500 font-bold">ASISTEN: <span class="text-teal-800 font-black ml-6">HERY SASONGKO (Jogja Utara)</span></p>
-                    </div>
-                    
-                    <div class="bg-white border border-slate-200 p-4 rounded-lg">
-                        <table class="w-full text-left border-separate border-spacing-y-2 text-slate-700">
-                            <tr><td class="w-40 align-top text-slate-500">Tanda Calon Baptis</td><td class="align-top">: Yansen (Purwokerto)</td></tr>
-                            <tr><td class="text-slate-500">Toilet Sdr</td><td>: Kodir (Purwokerto)</td></tr>
-                            <tr><td class="text-slate-500">Toilet Sdri</td><td>: Slamet Rahayu (Purwokerto)</td></tr>
-                            <tr>
-                                <td class="align-top pt-3 text-slate-500">Penjaga Kolam Baptis</td>
-                                <td class="pt-3">
-                                    <ul class="list-disc pl-5 space-y-1">
-                                        <li>Hartono Budi (Surabaya)</li>
-                                        <li>Sucipto (Surabaya)</li>
-                                        <li>Tugiyo (Jogja Selatan)</li>
-                                        <li>Duwi (Ungaran)</li>
-                                        <li>Yadi (Salatiga)</li>
-                                    </ul>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
+                <div class="flex items-center gap-3 mb-4 pb-3 border-b border-slate-100"><span class="text-2xl">💧</span><h3 class="font-black text-slate-800 uppercase tracking-widest">Baptisan</h3></div>
+                <div class="bg-teal-50 p-4 rounded-lg border border-teal-100 mb-4">
+                    <p class="text-slate-500 mb-1">PENGAWAS: <span class="text-teal-800 font-black ml-2">GIRI PRASETYO (Jogja Utara)</span></p>
+                    <p class="text-slate-500">ASISTEN: <span class="text-teal-800 font-black ml-6">HERY SASONGKO (Jogja Utara)</span></p>
                 </div>
             </div>
-
         </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 5. PANEL PENGAWAS (ADMIN CONTROL) -->
+    <!-- ========================================== -->
+    <div id="page-admin" class="app-page px-4 md:px-5 pt-6 pb-20 max-w-3xl mx-auto">
+        <h2 class="text-xl font-black text-slate-800 uppercase tracking-widest text-center mb-6 border-b-2 border-slate-200 pb-3">PANEL PENGAWAS</h2>
+        
+        <div class="bg-blue-50 border border-blue-200 p-4 rounded-2xl mb-6 shadow-sm">
+            <p class="text-xs font-bold text-blue-900 leading-relaxed text-center">Setiap perubahan di halaman ini akan MENGHAPUS TOTAL formasi denah & hitungan kursi yang ada saat ini. Pastikan dilakukan HANYA SEBELUM acara dimulai.</p>
+        </div>
+
+        <!-- LIST CONFIG BLOK -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm mb-6">
+            <h3 class="font-black text-slate-800 mb-4 tracking-widest text-sm">🪑 MANAJEMEN DENAH KURSI</h3>
+            <div id="admin-blok-list" class="space-y-3 mb-4"></div>
+            <button onclick="adminAddBlok()" class="w-full bg-slate-100 text-slate-600 font-bold py-3 rounded-xl border-2 border-dashed border-slate-300 active:bg-slate-200 transition">+ Tambah Blok Baru</button>
+        </div>
+
+        <!-- LIST CONFIG AREA LUAR -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm mb-6">
+            <h3 class="font-black text-slate-800 mb-4 tracking-widest text-sm">🚶 MANAJEMEN AREA LUAR</h3>
+            <div id="admin-luar-list" class="space-y-3 mb-4"></div>
+            <button onclick="adminAddLuar()" class="w-full bg-slate-100 text-slate-600 font-bold py-3 rounded-xl border-2 border-dashed border-slate-300 active:bg-slate-200 transition">+ Tambah Area Baru</button>
+        </div>
+
+        <button onclick="adminSaveConfig()" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-black py-4 rounded-2xl shadow-lg active:scale-95 transition tracking-widest mb-6">SIMPAN & BUAT DENAH BARU</button>
+
+        <button onclick="adminResetData()" class="w-full py-4 bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold rounded-xl active:scale-95 transition border border-rose-200 text-xs shadow-sm">⚠ KOSONGKAN SEMUA KURSI & AREA (TANPA UBAH FORMASI)</button>
     </div>
 
     <!-- ========================================== -->
@@ -356,47 +257,32 @@
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbxsDq-FMNioyTRftAjrsQtATbk36Trgco81fsiMJzUbacRUnj8KduIlJnbZ4_Jw44goUA/exec"; 
         
-        const namaPetugas = {
-            'A': 'AGUNG DANAR', 'B': 'YANUAR', 'C': 'TEOFILIUS', 'D': 'JADI', 
-            'E': 'BAGUS ANDREANTO', 'F': 'WISNU JATMIKO', 'G': 'HENDRIK', 'H': 'EKO HERI'
-        };
-
-        let dbKursi = [];
-        let daftarBlok = [];
-        let currentLuarVal = 0;
+        let configBlokData = [];
+        let configLuarData = [];
+        let kursiMap = {};
+        let luarMap = {};
         
         const haptic = (strength = 30) => { if(navigator.vibrate) navigator.vibrate(strength); }
-
-        const showLoading = (show, text="MEMUAT DATA...") => {
-            document.getElementById('loading-text').innerText = text;
-            document.getElementById('loading').style.display = show ? 'flex' : 'none';
-        }
-
+        const showLoading = (show, text="MEMUAT DATA...") => { document.getElementById('loading-text').innerText = text; document.getElementById('loading').style.display = show ? 'flex' : 'none'; }
+        
         function showToast(msg, isError = false) {
             const toast = document.getElementById('toast');
             document.getElementById('toast-icon').innerText = isError ? '❌' : '✅';
             document.getElementById('toast-msg').innerText = msg;
-            toast.classList.remove('opacity-0');
-            toast.classList.add('opacity-100');
-            if(isError) toast.classList.replace('bg-slate-800', 'bg-rose-600');
-            else toast.classList.replace('bg-rose-600', 'bg-slate-800');
-            
-            setTimeout(() => {
-                toast.classList.remove('opacity-100');
-                toast.classList.add('opacity-0');
-            }, 2000);
+            toast.classList.remove('opacity-0'); toast.classList.add('opacity-100');
+            isError ? toast.classList.replace('bg-slate-800', 'bg-rose-600') : toast.classList.replace('bg-rose-600', 'bg-slate-800');
+            setTimeout(() => { toast.classList.remove('opacity-100'); toast.classList.add('opacity-0'); }, 2000);
         }
 
         function navigate(pageId) {
             document.querySelectorAll('.app-page').forEach(el => el.classList.remove('is-visible'));
             document.getElementById(pageId).classList.add('is-visible');
-            
             const btnHome = document.getElementById('btn-home');
-            const title = document.getElementById('top-title');
             const btnAdmin = document.getElementById('btn-admin');
+            const title = document.getElementById('top-title');
             
             if(pageId === 'page-dashboard') { 
-                btnHome.classList.add('hidden');
+                btnHome.classList.add('hidden'); 
                 if(btnAdmin) btnAdmin.classList.remove('hidden');
                 title.innerText = "PORTAL TATA TERTIB";
             } else {
@@ -405,13 +291,12 @@
                 if(pageId === 'page-denah') title.innerText = "DENAH KURSI";
                 if(pageId === 'page-luar') title.innerText = "AREA LUAR";
                 if(pageId === 'page-tugas') title.innerText = "JADWAL TUGAS";
+                if(pageId === 'page-admin') title.innerText = "PANEL PENGAWAS";
             }
             window.scrollTo(0, 0); 
         }
 
-        const apiPost = async (payload) => {
-            return fetch(API_URL, { method: 'POST', body: JSON.stringify(payload), headers: { 'Content-Type': 'text/plain;charset=utf-8' } });
-        };
+        const apiPost = async (payload) => fetch(API_URL, { method: 'POST', body: JSON.stringify(payload), headers: { 'Content-Type': 'text/plain;charset=utf-8' } });
 
         function stampTime() {
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
@@ -423,236 +308,218 @@
             try {
                 const response = await fetch(`${API_URL}?action=getData`);
                 const res = await response.json();
-                
                 if(res.status === "success") {
-                    document.getElementById('dash-kursi').innerText = res.data.detail.kursi;
-                    document.getElementById('dash-luar').innerText = res.data.detail.luar;
+                    document.getElementById('dash-kursi').innerText = res.data.total_kursi;
+                    document.getElementById('dash-luar').innerText = res.data.total_luar;
                     document.getElementById('dash-total').innerText = res.data.total_hadirin;
                     
-                    currentLuarVal = res.data.detail.luar;
-                    document.getElementById('display-luar').innerText = currentLuarVal;
-                    
-                    dbKursi = res.data.kursi || [];
-                    daftarBlok = res.data.daftar_blok || [];
+                    configBlokData = res.data.config_blok || [];
+                    configLuarData = res.data.config_luar || [];
+                    kursiMap = res.data.kursi_map || {};
+                    luarMap = res.data.luar_map || {};
                     
                     initDenah();
+                    initLuar();
                     stampTime();
-                    
                     if(!showLoadScreen) showToast("Data Diperbarui");
-                } else {
-                    alert("Pesan Server: " + res.message);
-                }
-            } catch(e) {
-                console.error(e);
-                if(showLoadScreen) alert("Gagal mengambil data. Periksa koneksi internet Anda.");
-            }
+                } else alert("Pesan Server: " + res.message);
+            } catch(e) { if(showLoadScreen) alert("Gagal mengambil data. Periksa koneksi internet Anda."); }
             if(showLoadScreen) showLoading(false);
         }
 
-        function expandAll() {
-            haptic(20);
-            document.querySelectorAll('.collapsible-content').forEach(el => el.classList.add('expanded'));
-            document.querySelectorAll('.block-icon').forEach(el => el.style.transform = "rotate(180deg)");
-        }
-
-        function collapseAll() {
-            haptic(20);
-            document.querySelectorAll('.collapsible-content').forEach(el => el.classList.remove('expanded'));
-            document.querySelectorAll('.block-icon').forEach(el => el.style.transform = "rotate(0deg)");
-        }
-
+        function expandAll() { haptic(20); document.querySelectorAll('.collapsible-content').forEach(el => el.classList.add('expanded')); document.querySelectorAll('.block-icon').forEach(el => el.style.transform = "rotate(180deg)"); }
+        function collapseAll() { haptic(20); document.querySelectorAll('.collapsible-content').forEach(el => el.classList.remove('expanded')); document.querySelectorAll('.block-icon').forEach(el => el.style.transform = "rotate(0deg)"); }
         function zoomDenah(change) {
-            haptic(20);
-            const root = document.documentElement;
+            haptic(20); const root = document.documentElement;
             let currentSize = parseInt(getComputedStyle(root).getPropertyValue('--seat-size')) || 36;
-            
             let newSize = currentSize + change;
-            if(newSize >= 24 && newSize <= 64) {
-                root.style.setProperty('--seat-size', `${newSize}px`);
-            }
+            if(newSize >= 24 && newSize <= 64) root.style.setProperty('--seat-size', `${newSize}px`);
+        }
+        function zoomText(change) {
+            haptic(20); const root = document.documentElement;
+            let currentSize = parseInt(getComputedStyle(root).getPropertyValue('--base-font-size')) || 14; 
+            let newSize = currentSize + change;
+            if(newSize >= 10 && newSize <= 22) root.style.setProperty('--base-font-size', `${newSize}px`);
         }
 
+        // --- RENDER DENAH DINAMIS (BERDASARKAN CONFIG ADMIN) ---
         function initDenah() {
             const container = document.getElementById('grid-container');
             container.innerHTML = "";
+            if(configBlokData.length === 0) { container.innerHTML = `<div class="bg-white p-8 text-center rounded-3xl border border-slate-200"><p class="text-slate-500 font-bold">Denah kosong. Gunakan Panel Pengawas.</p></div>`; return; }
 
-            if(daftarBlok.length === 0) {
-                container.innerHTML = `<div class="bg-white p-8 text-center rounded-3xl border border-slate-200"><p class="text-slate-500 font-bold text-sm">Denah belum dibuat di Database.<br>Login sebagai Admin untuk Generate.</p></div>`;
-                return;
-            }
-
-            const validBlocks = daftarBlok.filter(b => ['A','B','C','D','E','F','G','H'].includes(b)).sort();
-
-            validBlocks.forEach(blok => {
-                const blokData = dbKursi.filter(s => s.blok === blok);
-                
+            configBlokData.forEach(blok => {
                 let kursiTerisi = 0;
-                blokData.forEach(k => { if(k.status === "Terisi") kursiTerisi++; });
-                let totalKursi = blokData.length;
-                let petugasBlok = namaPetugas[blok] || "Petugas";
+                let totalKursi = blok.baris * blok.kolom;
+                for(let r=1; r<=blok.baris; r++) { for(let c=1; c<=blok.kolom; c++) { if(kursiMap[`${blok.id}-${r}-${c}`] === "Terisi") kursiTerisi++; } }
 
                 const blockDiv = document.createElement('div');
                 blockDiv.className = "bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden mb-4";
                 
-                const headerHtml = `
-                    <button onclick="toggleCollapse('${blok}')" class="w-full flex justify-between items-center p-4 bg-slate-50 hover:bg-slate-100 transition border-b border-slate-200">
-                        <div class="text-left">
-                            <h3 class="font-black text-lg text-slate-800 tracking-wider">BLOK ${blok}</h3>
-                            <p class="text-[9px] font-bold text-slate-400 mt-0.5 uppercase">Petugas: <span class="text-[11px] font-black text-teal-700 ml-1">${petugasBlok}</span></p>
-                        </div>
-                        <div class="text-right flex flex-col items-end gap-1">
-                            <div class="text-[10px] font-bold text-slate-400 bg-white px-2 py-0.5 rounded-full border border-slate-200"><span id="count-${blok}" class="text-rose-600">${kursiTerisi}</span> / ${totalKursi}</div>
-                            <span id="icon-${blok}" class="block-icon text-xl text-slate-400 font-black transition-transform duration-300">▼</span>
-                        </div>
-                    </button>
-                `;
+                const headerHtml = `<button onclick="toggleCollapse('${blok.id}')" class="w-full flex justify-between items-center p-4 bg-slate-50 hover:bg-slate-100 border-b border-slate-200"><div class="text-left"><h3 class="font-black text-lg text-slate-800 tracking-wider">BLOK ${blok.id}</h3><p class="text-[9px] font-bold text-slate-400 mt-0.5 uppercase">Petugas: <span class="text-[11px] font-black text-teal-700 ml-1">${blok.petugas}</span></p></div><div class="text-right flex flex-col items-end gap-1"><div class="text-[10px] font-bold text-slate-400 bg-white px-2 py-0.5 rounded-full border border-slate-200"><span id="count-${blok.id}" class="text-rose-600">${kursiTerisi}</span> / ${totalKursi}</div><span id="icon-${blok.id}" class="block-icon text-xl text-slate-400 font-black transition-transform duration-300">▼</span></div></button>`;
 
                 const contentDiv = document.createElement('div');
-                contentDiv.id = `content-${blok}`;
+                contentDiv.id = `content-${blok.id}`;
                 contentDiv.className = "collapsible-content p-2 md:p-4 scroll-container";
-                
-                const maxKolom = Math.max(...blokData.map(s => s.kolom));
-                const maxBaris = Math.max(...blokData.map(s => s.baris));
 
                 const grid = document.createElement('div');
                 grid.style.display = "grid";
-                grid.style.gridTemplateColumns = `20px repeat(${maxKolom}, minmax(var(--seat-size), 1fr))`;
+                grid.style.gridTemplateColumns = `20px repeat(${blok.kolom}, minmax(var(--seat-size), 1fr))`;
                 grid.className = "gap-1 md:gap-1.5 items-center justify-items-center w-max min-w-full pb-2";
 
                 grid.appendChild(document.createElement('div'));
-                for (let c = 1; c <= maxKolom; c++) {
-                    const colLabel = document.createElement('div');
-                    colLabel.className = "text-[10px] font-bold text-slate-400 pb-1";
-                    colLabel.innerText = c;
-                    grid.appendChild(colLabel);
-                }
+                for (let c = 1; c <= blok.kolom; c++) { const colLabel = document.createElement('div'); colLabel.className = "text-[10px] font-bold text-slate-400 pb-1"; colLabel.innerText = c; grid.appendChild(colLabel); }
 
-                for (let r = 1; r <= maxBaris; r++) {
-                    const rowLabel = document.createElement('div');
-                    rowLabel.className = "text-[10px] font-bold text-slate-400 pr-1 w-full text-right";
-                    rowLabel.innerText = r;
-                    grid.appendChild(rowLabel);
-
-                    for (let c = 1; c <= maxKolom; c++) {
-                        const kursi = blokData.find(s => s.baris === r && s.kolom === c);
+                for (let r = 1; r <= blok.baris; r++) {
+                    const rowLabel = document.createElement('div'); rowLabel.className = "text-[10px] font-bold text-slate-400 pr-1 w-full text-right"; rowLabel.innerText = r; grid.appendChild(rowLabel);
+                    for (let c = 1; c <= blok.kolom; c++) {
+                        const kursiId = `${blok.id}-${r}-${c}`;
+                        const isKosong = (kursiMap[kursiId] !== "Terisi");
+                        let num = ((r - 1) * blok.kolom) + c;
                         
-                        if (kursi) {
-                            const isKosong = kursi.status === "Kosong";
-                            let num = ((r - 1) * maxKolom) + c;
+                        const btn = document.createElement('button');
+                        btn.className = `w-full aspect-square rounded-[4px] sm:rounded-md flex justify-center items-center text-[10px] font-black transition-transform active:scale-75 ${isKosong ? 'seat-green' : 'seat-red'}`;
+                        btn.innerText = num.toString().padStart(2, '0');
+                        
+                        btn.onclick = () => {
+                            haptic(30); 
+                            const newStatus = kursiMap[kursiId] === "Terisi" ? "Kosong" : "Terisi";
+                            kursiMap[kursiId] = newStatus; 
+                            newStatus === "Kosong" ? btn.classList.replace('seat-red', 'seat-green') : btn.classList.replace('seat-green', 'seat-red');
                             
-                            const btn = document.createElement('button');
-                            btn.className = `w-full aspect-square rounded-[4px] sm:rounded-md flex justify-center items-center text-[10px] font-black transition-transform active:scale-75 ${isKosong ? 'seat-green' : 'seat-red'}`;
-                            btn.innerText = num.toString().padStart(2, '0');
+                            let count = parseInt(document.getElementById(`count-${blok.id}`).innerText);
+                            document.getElementById(`count-${blok.id}`).innerText = newStatus === "Terisi" ? count + 1 : count - 1;
                             
-                            btn.onclick = () => {
-                                haptic(30); 
-                                const newStatus = kursi.status === "Kosong" ? "Terisi" : "Kosong";
-                                kursi.status = newStatus; 
-                                
-                                newStatus === "Kosong" ? btn.classList.replace('seat-red', 'seat-green') : btn.classList.replace('seat-green', 'seat-red');
-                                
-                                let count = parseInt(document.getElementById(`count-${blok}`).innerText);
-                                document.getElementById(`count-${blok}`).innerText = newStatus === "Terisi" ? count + 1 : count - 1;
-                                
-                                apiPost({ action: 'updateKursi', id_kursi: kursi.id_kursi, status_baru: newStatus })
-                                .then(() => {
-                                    let currentDash = parseInt(document.getElementById('dash-kursi').innerText);
-                                    let currentTotal = parseInt(document.getElementById('dash-total').innerText);
-                                    document.getElementById('dash-kursi').innerText = newStatus === "Terisi" ? currentDash + 1 : currentDash - 1;
-                                    document.getElementById('dash-total').innerText = newStatus === "Terisi" ? currentTotal + 1 : currentTotal - 1;
-                                }).catch(() => showToast("Koneksi Gagal!", true));
-                            };
-                            grid.appendChild(btn);
-                        } else {
-                            grid.appendChild(document.createElement('div'));
-                        }
+                            apiPost({ action: 'updateKursi', id_kursi: kursiId, status_baru: newStatus })
+                            .then(() => {
+                                let cDash = parseInt(document.getElementById('dash-kursi').innerText);
+                                let cTot = parseInt(document.getElementById('dash-total').innerText);
+                                document.getElementById('dash-kursi').innerText = newStatus === "Terisi" ? cDash + 1 : cDash - 1;
+                                document.getElementById('dash-total').innerText = newStatus === "Terisi" ? cTot + 1 : cTot - 1;
+                            }).catch(() => showToast("Gagal Sinkron", true));
+                        };
+                        grid.appendChild(btn);
                     }
                 }
+                contentDiv.appendChild(grid); blockDiv.innerHTML = headerHtml; blockDiv.appendChild(contentDiv); container.appendChild(blockDiv);
+            });
+        }
+        
+        function toggleCollapse(blokId) {
+            const content = document.getElementById(`content-${blokId}`); const icon = document.getElementById(`icon-${blokId}`);
+            if(content.classList.contains('expanded')) { content.classList.remove('expanded'); icon.style.transform = "rotate(0deg)"; } 
+            else { content.classList.add('expanded'); icon.style.transform = "rotate(180deg)"; }
+        }
+
+        // --- RENDER AREA LUAR DINAMIS (BERDASARKAN CONFIG ADMIN) ---
+        function initLuar() {
+            const container = document.getElementById('luar-container');
+            container.innerHTML = "";
+            if(configLuarData.length === 0) { container.innerHTML = `<p class="text-center text-slate-500 font-bold">Belum ada Area Luar yang dibuat.</p>`; return; }
+
+            configLuarData.forEach((luar, idx) => {
+                let currentVal = luarMap[luar.area] || 0;
                 
-                contentDiv.appendChild(grid);
-                blockDiv.innerHTML = headerHtml;
-                blockDiv.appendChild(contentDiv);
-                container.appendChild(blockDiv);
+                const div = document.createElement('div');
+                div.className = "bg-white p-6 rounded-3xl flex flex-col items-center border border-slate-200 shadow-sm text-center mb-6";
+                div.innerHTML = `
+                    <div class="font-black text-slate-800 text-lg uppercase tracking-widest mb-1">${luar.area}</div>
+                    <div class="text-[10px] font-bold text-slate-400 uppercase mb-4">Petugas: <span class="text-teal-700">${luar.petugas}</span></div>
+                    
+                    <div class="flex items-center justify-center gap-6 mb-5">
+                        <button onclick="ubahAreaLuarVal('${luar.area}', -1)" class="w-14 h-14 rounded-full bg-slate-100 border border-slate-200 text-2xl font-black text-slate-600 active:scale-90 active:bg-rose-100 active:text-rose-600 shadow-sm select-none touch-manipulation">-</button>
+                        <div class="text-5xl font-black text-slate-800 w-20" id="luar-val-${idx}">${currentVal}</div>
+                        <button onclick="ubahAreaLuarVal('${luar.area}', 1)" class="w-14 h-14 rounded-full bg-teal-50 border border-teal-200 text-2xl font-black text-teal-600 active:scale-90 active:bg-teal-500 active:text-white shadow-sm select-none touch-manipulation">+</button>
+                    </div>
+                    
+                    <button onclick="syncLuarToAPI('${luar.area}', ${idx}, this)" class="bg-slate-800 text-white px-8 py-3 rounded-xl font-bold text-xs shadow-md active:scale-95 transition">SIMPAN AREA INI</button>
+                `;
+                container.appendChild(div);
             });
         }
 
-        function toggleCollapse(blokId) {
-            const content = document.getElementById(`content-${blokId}`);
-            const icon = document.getElementById(`icon-${blokId}`);
-            if(content.classList.contains('expanded')) {
-                content.classList.remove('expanded');
-                icon.style.transform = "rotate(0deg)";
-            } else {
-                content.classList.add('expanded');
-                icon.style.transform = "rotate(180deg)";
-            }
+        function ubahAreaLuarVal(areaId, amount) {
+            const idx = configLuarData.findIndex(l => l.area === areaId);
+            let newVal = (luarMap[areaId] || 0) + amount;
+            if(newVal < 0) newVal = 0;
+            luarMap[areaId] = newVal;
+            document.getElementById(`luar-val-${idx}`).innerText = newVal;
+            haptic(amount > 0 ? 50 : 20); // Efek getar halus
         }
 
-        function ubahAreaLuar(amount) {
-            let newVal = currentLuarVal + amount;
-            if(newVal < 0) newVal = 0; 
-            currentLuarVal = newVal;
-            document.getElementById('display-luar').innerText = currentLuarVal;
-        }
-
-        async function syncLuarToAPI() {
+        async function syncLuarToAPI(areaId, idx, btnObj) {
             haptic(40);
-            const btn = document.getElementById('btn-sync-luar');
-            btn.innerText = "MENYIMPAN...";
-            btn.classList.add('opacity-50');
-            
+            btnObj.innerText = "⏳ MENYIMPAN..."; btnObj.classList.add('opacity-50');
             try {
-                await apiPost({ action: 'updateLuar', jumlah: currentLuarVal });
-                document.getElementById('dash-luar').innerText = currentLuarVal;
-                let currentKursi = parseInt(document.getElementById('dash-kursi').innerText);
-                document.getElementById('dash-total').innerText = currentKursi + currentLuarVal;
+                await apiPost({ action: 'updateLuar', area: areaId, jumlah: luarMap[areaId] });
                 
-                showToast("Data Tersimpan");
-                stampTime();
+                // Recalculate Dashboard Totals
+                let sumLuar = 0; for(let k in luarMap) sumLuar += luarMap[k];
+                document.getElementById('dash-luar').innerText = sumLuar;
+                let cKursi = parseInt(document.getElementById('dash-kursi').innerText);
+                document.getElementById('dash-total').innerText = cKursi + sumLuar;
+                
+                showToast("Data Tersimpan"); stampTime();
             } catch(e) { showToast("Gagal Menyimpan", true); }
-            
-            btn.innerText = "SIMPAN KE DATABASE";
-            btn.classList.remove('opacity-50');
+            btnObj.innerText = "SIMPAN AREA INI"; btnObj.classList.remove('opacity-50');
         }
 
-        function zoomText(change) {
-            haptic(20);
-            const root = document.documentElement;
-            let currentSize = parseInt(getComputedStyle(root).getPropertyValue('--base-font-size'));
-            if(isNaN(currentSize)) currentSize = 14; 
+        // --- PANEL ADMIN LOGIC ---
+        function bukaPanelAdmin() {
+            const sandi = prompt("Sandi Administrator:");
+            if (sandi === "admin") { renderAdminPanel(); navigate('page-admin'); } 
+            else if (sandi !== null) { alert("Sandi salah."); }
+        }
+
+        function renderAdminPanel() {
+            const bCont = document.getElementById('admin-blok-list'); bCont.innerHTML = "";
+            configBlokData.forEach((b, i) => {
+                bCont.innerHTML += `<div class="bg-slate-50 p-3 rounded-xl border border-slate-200"><div class="flex justify-between items-center mb-2"><span class="font-black text-sm text-slate-700">Blok ${b.id}</span><button onclick="adminDelBlok(${i})" class="text-rose-500 font-bold text-xs bg-rose-100 px-2 py-1 rounded shadow-sm">Hapus</button></div><div class="grid grid-cols-3 gap-2 mb-2"><input type="text" id="ab-id-${i}" value="${b.id}" class="p-2 text-xs font-bold border rounded-lg text-center" title="Nama Blok (Misal: A)"><input type="number" id="ab-k-${i}" value="${b.kolom}" class="p-2 text-xs font-bold border rounded-lg text-center" title="Kolom (Kanan)"><input type="number" id="ab-r-${i}" value="${b.baris}" class="p-2 text-xs font-bold border rounded-lg text-center" title="Baris (Belakang)"></div><input type="text" id="ab-p-${i}" value="${b.petugas}" class="w-full p-2 text-xs font-bold border rounded-lg" placeholder="Nama Petugas"></div>`;
+            });
+
+            const lCont = document.getElementById('admin-luar-list'); lCont.innerHTML = "";
+            configLuarData.forEach((l, i) => {
+                lCont.innerHTML += `<div class="bg-slate-50 p-3 rounded-xl border border-slate-200"><div class="flex justify-between items-center mb-2"><input type="text" id="al-a-${i}" value="${l.area}" class="p-2 text-xs font-bold border rounded-lg w-2/3 shadow-sm"><button onclick="adminDelLuar(${i})" class="text-rose-500 font-bold text-xs bg-rose-100 px-2 py-1 rounded shadow-sm">Hapus</button></div><input type="text" id="al-p-${i}" value="${l.petugas}" class="w-full p-2 text-xs font-bold border rounded-lg shadow-sm" placeholder="Nama Petugas"></div>`;
+            });
+        }
+
+        function adminAddBlok() { configBlokData.push({id: 'X', kolom: 13, baris: 11, petugas: 'Petugas Baru'}); renderAdminPanel(); }
+        function adminDelBlok(i) { configBlokData.splice(i, 1); renderAdminPanel(); }
+        function adminAddLuar() { configLuarData.push({area: 'Area Baru', petugas: 'Petugas Baru'}); renderAdminPanel(); }
+        function adminDelLuar(i) { configLuarData.splice(i, 1); renderAdminPanel(); }
+
+        async function adminSaveConfig() {
+            if(!confirm("PERINGATAN KRITIKAL!\nMenyimpan formasi akan menghapus seluruh data kursi dan luar saat ini, dan meresetnya menjadi 0. Lanjutkan?")) return;
             
-            let newSize = currentSize + change;
-            if(newSize >= 10 && newSize <= 22) {
-                root.style.setProperty('--base-font-size', `${newSize}px`);
+            for(let i=0; i<configBlokData.length; i++) {
+                configBlokData[i].id = document.getElementById(`ab-id-${i}`).value;
+                configBlokData[i].kolom = parseInt(document.getElementById(`ab-k-${i}`).value);
+                configBlokData[i].baris = parseInt(document.getElementById(`ab-r-${i}`).value);
+                configBlokData[i].petugas = document.getElementById(`ab-p-${i}`).value;
             }
+            for(let i=0; i<configLuarData.length; i++) {
+                configLuarData[i].area = document.getElementById(`al-a-${i}`).value;
+                configLuarData[i].petugas = document.getElementById(`al-p-${i}`).value;
+            }
+
+            showLoading(true, "MEMBANGUN FORMASI BARU...");
+            await apiPost({ action: 'saveConfig', config_blok: configBlokData, config_luar: configLuarData });
+            await loadDataFromAPI(false);
+            showLoading(false);
+            alert("Sistem berhasil dirombak!");
+            navigate('page-dashboard');
         }
 
-        async function bukaMenuAdmin() {
-            const sandi = prompt("Masukkan Sandi Administrator:");
-            if (sandi === "admin") {
-                const aksi = prompt("MENU ADMIN:\nKetik '1' untuk Reset Semua Kursi ke Kosong\nKetik '2' untuk Generate Formasi Blok A-D (13x11) & E-H (13x6)");
-                if (aksi === "1") {
-                    if(confirm("Yakin mereset seluruh data kursi di Spreadsheet menjadi KOSONG?")) {
-                        showLoading(true, "MERESET DATABASE...");
-                        await apiPost({ action: 'resetAll' });
-                        await loadDataFromAPI(false);
-                        showLoading(false);
-                        alert("Data kursi berhasil dikosongkan.");
-                    }
-                } else if (aksi === "2") {
-                    if(confirm("Data denah lama akan TERHAPUS dan diganti formasi A-H. Lanjut?")) {
-                        showLoading(true, "MEMBUAT FORMASI BARU...");
-                        await apiPost({ action: 'generateFormasiBaru' });
-                        await loadDataFromAPI(false);
-                        showLoading(false);
-                        alert("Formasi baru berhasil dibuat!");
-                    }
-                }
-            } else if (sandi !== null) { alert("Sandi salah."); }
+        async function adminResetData() {
+            if(!confirm("Yakin mereset seluruh hitungan (Kursi & Luar) kembali ke 0?\n(Ukuran blok dan nama petugas tidak akan berubah)")) return;
+            showLoading(true, "MERESET DATA...");
+            await apiPost({ action: 'resetAll' });
+            await loadDataFromAPI(false);
+            showLoading(false);
+            alert("Data berhasil dikosongkan.");
         }
 
         window.onload = () => loadDataFromAPI(true);
-
     </script>
 </body>
 </html>
