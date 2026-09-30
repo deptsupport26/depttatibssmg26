@@ -33,11 +33,14 @@
         
         <div class="flex items-center gap-3">
             <button onclick="loadDataFromAPI()" class="text-xl active:scale-95 transition" title="Refresh Data">🔄</button>
-            <button onclick="bukaMenuAdmin()" id="btn-admin" class="text-xl active:scale-95 transition grayscale opacity-50 hover:grayscale-0 hover:opacity-100">⚙️</button>
+            <!-- Tombol Admin Tersembunyi (Roda Gigi) -->
+            <button onclick="bukaMenuAdmin()" class="text-xl active:scale-95 transition grayscale opacity-50 hover:grayscale-0 hover:opacity-100">⚙️</button>
         </div>
     </div>
 
-    <!-- 1. DASHBOARD UTAMA -->
+    <!-- ========================================== -->
+    <!-- 1. DASHBOARD UTAMA (PUBLIC) -->
+    <!-- ========================================== -->
     <div id="page-dashboard" class="app-page is-visible">
         <div class="bg-slate-900 pt-8 pb-12 px-6 rounded-b-[2rem] shadow-md text-center relative mb-8">
             <h2 class="text-2xl font-black text-white mb-1">Status Kehadiran</h2>
@@ -49,7 +52,7 @@
         <div class="px-5 space-y-5 -mt-10 relative z-10 max-w-2xl mx-auto">
             <!-- STATISTIK -->
             <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200 text-center">
-                <p class="text-[10px] font-bold text-slate-400 tracking-widest mb-1">TOTAL HADIRIN</p>
+                <p class="text-[10px] font-bold text-slate-400 tracking-widest mb-1">TOTAL HADIRIN KESELURUHAN</p>
                 <div class="text-7xl font-black text-slate-800 mb-2" id="dash-total">0</div>
                 <div class="flex justify-center gap-6 text-sm font-bold text-slate-500 border-t border-slate-100 pt-4 mt-2">
                     <span>🪑 Kursi: <span id="dash-kursi" class="text-teal-600 text-lg">0</span></span>
@@ -62,12 +65,12 @@
                 <button onclick="navigate('page-denah')" class="p-5 rounded-3xl flex flex-col justify-center items-center text-center shadow-sm border border-slate-200 bg-white active:scale-95 transition">
                     <div class="text-4xl mb-2">🪑</div>
                     <div class="font-black text-xs tracking-wide">DENAH KURSI</div>
-                    <div class="text-[9px] font-medium text-slate-500 mt-1">Status Blok</div>
+                    <div class="text-[9px] font-medium text-slate-500 mt-1">Isi & Pantau Blok</div>
                 </button>
                 <button onclick="navigate('page-luar')" class="p-5 rounded-3xl flex flex-col justify-center items-center text-center shadow-sm border border-slate-200 bg-white active:scale-95 transition">
                     <div class="text-4xl mb-2">🚶</div>
                     <div class="font-black text-xs tracking-wide">AREA LUAR</div>
-                    <div class="text-[9px] font-medium text-slate-500 mt-1">Hitung Manual</div>
+                    <div class="text-[9px] font-medium text-slate-500 mt-1">Hitung Manual Lesehan</div>
                 </button>
             </div>
 
@@ -85,13 +88,17 @@
         </div>
     </div>
 
+    <!-- ========================================== -->
     <!-- 2. DENAH KURSI -->
+    <!-- ========================================== -->
     <div id="page-denah" class="app-page px-4 pt-6 pb-20">
         <div class="max-w-2xl mx-auto w-full bg-slate-800 text-center py-4 rounded-xl font-black text-white tracking-[0.4em] mb-6 text-[10px] shadow-md">PANGGUNG UTAMA</div>
         <div id="grid-container" class="space-y-4 max-w-4xl mx-auto"></div>
     </div>
 
+    <!-- ========================================== -->
     <!-- 3. AREA LUAR -->
+    <!-- ========================================== -->
     <div id="page-luar" class="app-page px-5 pt-8 pb-20 max-w-2xl mx-auto">
         <div class="bg-indigo-50 border border-indigo-200 p-4 rounded-2xl mb-6 flex gap-3 items-start shadow-sm">
             <span class="text-xl">💡</span>
@@ -101,13 +108,15 @@
         <div class="bg-white p-6 rounded-3xl flex justify-between items-center border border-slate-200 shadow-sm">
             <div class="font-black text-slate-800 text-sm">TOTAL HADIRIN LUAR</div>
             <div class="flex items-center gap-2">
-                <input type="number" id="input-luar-val" value="0" min="0" class="w-20 bg-slate-50 py-3 text-center font-black text-xl rounded-xl outline-none border border-slate-200 focus:border-teal-400">
-                <button onclick="saveAreaLuar()" class="bg-teal-600 text-white px-4 py-3 rounded-xl font-bold text-xs shadow-md active:scale-95 transition">SIMPAN</button>
+                <input type="number" id="input-luar-val" value="0" min="0" class="w-24 bg-slate-50 py-3 text-center font-black text-xl rounded-xl outline-none border border-slate-200 focus:border-teal-400">
+                <button onclick="saveAreaLuar()" class="bg-teal-600 text-white px-5 py-3 rounded-xl font-bold text-xs shadow-md active:scale-95 transition">SIMPAN</button>
             </div>
         </div>
     </div>
 
+    <!-- ========================================== -->
     <!-- 4. JADWAL TUGAS -->
+    <!-- ========================================== -->
     <div id="page-tugas" class="app-page px-5 pt-6 pb-20 max-w-2xl mx-auto">
         <h2 class="text-xl font-black text-slate-800 mb-6 text-center uppercase tracking-widest border-b-2 border-slate-200 pb-3">Daftar Penugasan</h2>
         
@@ -229,9 +238,11 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT LOGIC (API FETCH DARI SPREADSHEET) -->
+    <!-- ========================================== -->
+    <!-- JAVASCRIPT LOGIC (API FETCH & UI CONTROL) -->
+    <!-- ========================================== -->
     <script>
-        // --- GANTI DENGAN URL API APPS SCRIPT ANDA ---
+        // URL API GOOGLE APPS SCRIPT ANDA
         const API_URL = "https://script.google.com/macros/s/AKfycbxsDq-FMNioyTRftAjrsQtATbk36Trgco81fsiMJzUbacRUnj8KduIlJnbZ4_Jw44goUA/exec"; 
         
         // Pemetaan nama petugas untuk header blok
@@ -250,16 +261,13 @@
             document.getElementById(pageId).classList.add('is-visible');
             
             const btnHome = document.getElementById('btn-home');
-            const btnAdmin = document.getElementById('btn-admin');
             const title = document.getElementById('top-title');
             
             if(pageId === 'page-dashboard') { 
                 btnHome.classList.add('hidden');
-                btnAdmin.classList.remove('hidden');
                 title.innerText = "PORTAL TATA TERTIB";
             } else {
                 btnHome.classList.remove('hidden');
-                btnAdmin.classList.add('hidden');
                 if(pageId === 'page-denah') title.innerText = "DENAH KURSI";
                 if(pageId === 'page-luar') title.innerText = "AREA LUAR";
                 if(pageId === 'page-tugas') title.innerText = "JADWAL TUGAS";
@@ -280,7 +288,9 @@
         async function loadDataFromAPI() {
             showLoading(true);
             try {
-                const res = await (await fetch(`${API_URL}?action=getData`)).json();
+                const response = await fetch(`${API_URL}?action=getData`);
+                const res = await response.json();
+                
                 if(res.status === "success") {
                     document.getElementById('dash-kursi').innerText = res.data.detail.kursi;
                     document.getElementById('dash-luar').innerText = res.data.detail.luar;
@@ -292,9 +302,12 @@
                     
                     initDenah();
                     stampTime();
+                } else {
+                    alert("Pesan dari Server: " + res.message);
                 }
             } catch(e) {
-                alert("Gagal mengambil data dari Database Spreadsheet.");
+                console.error(e);
+                alert("Gagal mengambil data dari Database. Pastikan Anda sudah Deploy 'Versi Baru' di Google Apps Script.");
             }
             showLoading(false);
         }
@@ -306,7 +319,7 @@
 
             // Jika Spreadsheet masih kosong
             if(daftarBlok.length === 0) {
-                container.innerHTML = `<div class="bg-white p-8 text-center rounded-3xl border border-slate-200"><p class="text-slate-500 font-bold text-sm">Denah belum dibuat di Database.<br>Gunakan fitur Admin untuk Generate.</p></div>`;
+                container.innerHTML = `<div class="bg-white p-8 text-center rounded-3xl border border-slate-200"><p class="text-slate-500 font-bold text-sm">Denah belum dibuat di Database.<br>Gunakan Menu Admin (Roda Gigi) untuk Generate.</p></div>`;
                 return;
             }
 
@@ -387,7 +400,7 @@
                             };
                             grid.appendChild(btn);
                         } else {
-                            grid.appendChild(document.createElement('div'));
+                            grid.appendChild(document.createElement('div')); // Spasi kosong
                         }
                     }
                 }
@@ -420,17 +433,17 @@
             btn.innerText = "✓"; setTimeout(() => btn.innerText = "SIMPAN", 1500);
         }
 
-        // --- FITUR ADMIN TERSEMBUNYI ---
+        // --- FITUR ADMIN TERSEMBUNYI (TOMBOL RODA GIGI) ---
         async function bukaMenuAdmin() {
             const sandi = prompt("Masukkan Sandi Administrator:");
             if (sandi === "admin") {
-                const aksi = prompt("MENU ADMIN:\nKetik '1' untuk Reset Semua Kursi ke Nol\nKetik '2' untuk Generate Formasi (Blok A-D 13x11 & E-F 13x6)");
+                const aksi = prompt("MENU ADMIN:\nKetik '1' untuk Reset Semua Kursi ke Nol (Kosong)\nKetik '2' untuk Generate Formasi (Blok A-D 13x11 & E-F 13x6)");
                 if (aksi === "1") {
-                    if(confirm("Yakin mereset seluruh data di Spreadsheet?")) {
+                    if(confirm("Yakin mereset seluruh data kursi di Spreadsheet menjadi KOSONG?")) {
                         showLoading(true);
                         await apiPost({ action: 'resetAll' });
                         await loadDataFromAPI();
-                        alert("Data berhasil dikosongkan.");
+                        alert("Data kursi berhasil dikosongkan.");
                     }
                 } else if (aksi === "2") {
                     if(confirm("Data denah lama di Excel akan TERHAPUS dan diganti formasi 13x11 & 13x6. Lanjut?")) {
@@ -445,6 +458,7 @@
             }
         }
 
+        // LOAD DATA SAAT WEB DIBUKA
         window.onload = loadDataFromAPI;
 
     </script>
