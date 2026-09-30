@@ -1,0 +1,12 @@
+{
+  "rules": {
+    "kursi": {
+      ".read": true,
+      ".write": true
+    },
+    "luar": {
+      ".read": true,
+      ".write": true
+    }
+  }
+}
