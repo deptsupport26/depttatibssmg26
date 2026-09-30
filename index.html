@@ -1,463 +1,452 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Portal Tata Tertib</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    body { -ms-overflow-style: none; scrollbar-width: none; background-color: #f1f5f9; }
-    ::-webkit-scrollbar { display: none; }
-    .app-page { display: none !important; }
-    .app-page.is-visible { display: block !important; animation: fadeIn 0.25s ease-out; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-    .seat-green { background-color: #10b981; color: white; border: 1px solid #059669; }
-    .seat-red { background-color: #e11d48; color: white; border: 1px solid #be123c; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Portal Tata Tertib</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { -ms-overflow-style: none; scrollbar-width: none; background-color: #f1f5f9; }
+        ::-webkit-scrollbar { display: none; }
+        .app-page { display: none !important; }
+        .app-page.is-visible { display: block !important; animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .seat-green { background-color: #10b981; color: white; border: 1px solid #059669; }
+        .seat-red { background-color: #e11d48; color: white; border: 1px solid #be123c; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); }
+        .collapsible-content { display: none; }
+        .collapsible-content.expanded { display: block; animation: fadeIn 0.2s ease-in; }
+    </style>
 </head>
 <body class="text-slate-800 font-sans antialiased select-none pb-24">
 
-  <!-- LOADING OVERLAY -->
-  <div id="loading" class="fixed inset-0 bg-slate-900/80 z-[100] hidden flex-col justify-center items-center backdrop-blur-sm">
-      <div class="animate-spin rounded-full h-12 w-12 border-4 border-t-teal-500 border-white mb-4"></div>
-      <p class="text-white font-bold tracking-widest text-sm animate-pulse">SINKRONISASI...</p>
-  </div>
-  
-  <!-- TOP NAVBAR -->
-  <div id="topbar" class="w-full flex justify-between items-center px-5 py-4 md:py-5 bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm hidden">
-    <button onclick="goDashboard()" id="btn-back" class="hidden flex items-center gap-1 text-slate-600 font-bold text-xs bg-slate-100 hover:bg-slate-200 px-3 py-2 rounded-lg active:scale-95 transition">
-        <span>◀</span> KEMBALI
-    </button>
-    <div id="top-title" class="font-black text-sm md:text-lg mx-auto tracking-widest text-slate-800 uppercase">TATA TERTIB</div>
-    <div class="flex items-center gap-1.5 text-[10px] font-bold text-teal-700 bg-teal-50 border border-teal-200 px-2 py-1.5 rounded-full">
-        <div class="w-2 h-2 bg-teal-500 rounded-full animate-pulse"></div> Online
-    </div>
-  </div>
-
-  <!-- 1. PAGE: LOGIN -->
-  <div id="page-login" class="app-page is-visible flex flex-col justify-center min-h-screen px-6 bg-slate-900">
-    <div class="text-center mb-8 relative z-10">
-      <h1 class="text-3xl md:text-4xl font-black mb-2 text-teal-400 tracking-tight">PORTAL TATA TERTIB</h1>
-      <p class="text-slate-400 text-xs md:text-sm font-medium tracking-widest">SISTEM PEMANTAUAN REAL-TIME</p>
-    </div>
-    
-    <div class="bg-white p-8 rounded-3xl shadow-2xl relative z-10 w-full max-w-md mx-auto">
-        <label class="block text-center text-xs font-bold text-slate-400 mb-4 uppercase tracking-widest">Akses PIN Personil</label>
-        <input type="password" id="pin-input" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-center text-3xl tracking-[0.5em] focus:border-teal-500 outline-none transition" placeholder="••••">
-        <button onclick="login()" class="mt-6 w-full bg-teal-600 text-white font-black py-4 rounded-xl shadow-lg shadow-teal-500/20 active:scale-95 transition-transform">AUTENTIKASI</button>
-    </div>
-  </div>
-
-  <!-- 2. PAGE: DASHBOARD -->
-  <div id="page-dashboard" class="app-page">
-    <div class="bg-slate-900 pt-10 pb-12 px-6 rounded-b-[2rem] shadow-md text-center relative mb-8">
-        <h2 class="text-2xl font-black text-white mb-2">Halo, <span id="user-name" class="text-teal-400">Nama</span>!</h2>
-        <div class="inline-block bg-white/10 px-4 py-1.5 rounded-full text-white text-[10px] font-bold border border-white/20 mt-1 tracking-widest" id="user-role">TUGAS ANDA</div>
+    <!-- LOADING OVERLAY -->
+    <div id="loading" class="fixed inset-0 bg-slate-900/80 z-[100] hidden flex-col justify-center items-center backdrop-blur-sm">
+        <div class="animate-spin rounded-full h-12 w-12 border-4 border-t-teal-500 border-white mb-4"></div>
+        <p class="text-white font-bold tracking-widest text-sm animate-pulse">SINKRONISASI SERVER...</p>
     </div>
 
-    <div class="px-5 space-y-6 -mt-10 relative z-10 max-w-2xl mx-auto">
+    <!-- TOP NAVBAR -->
+    <div class="w-full flex justify-between items-center px-5 py-4 bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+        <button onclick="navigate('page-dashboard')" id="btn-home" class="hidden text-2xl active:scale-95 transition">🏠</button>
+        <div id="top-title" class="font-black text-sm md:text-lg mx-auto tracking-widest text-slate-800 uppercase">PORTAL TATA TERTIB</div>
         
-        <!-- ADMIN STATS -->
-        <div id="card-stats" class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200 text-center hidden">
-            <p class="text-[10px] font-bold text-slate-400 tracking-widest mb-1">TOTAL HADIRIN</p>
-            <div class="text-6xl font-black text-slate-800 mb-2" id="dash-total">0</div>
-            <div class="flex justify-center gap-6 text-xs font-bold text-slate-500 border-t border-slate-100 pt-4 mt-2">
-                <span>🪑 Kursi: <span id="dash-kursi" class="text-teal-600">0</span></span>
-                <span>🚶 Luar: <span id="dash-luar" class="text-indigo-600">0</span></span>
+        <div class="flex items-center gap-3">
+            <button onclick="loadDataFromAPI()" class="text-xl active:scale-95 transition" title="Refresh Data">🔄</button>
+            <button onclick="bukaMenuAdmin()" id="btn-admin" class="text-xl active:scale-95 transition grayscale opacity-50 hover:grayscale-0 hover:opacity-100">⚙️</button>
+        </div>
+    </div>
+
+    <!-- 1. DASHBOARD UTAMA -->
+    <div id="page-dashboard" class="app-page is-visible">
+        <div class="bg-slate-900 pt-8 pb-12 px-6 rounded-b-[2rem] shadow-md text-center relative mb-8">
+            <h2 class="text-2xl font-black text-white mb-1">Status Kehadiran</h2>
+            <div class="inline-block bg-white/10 px-4 py-1.5 rounded-full text-teal-300 text-[10px] font-bold border border-white/20 mt-1" id="timestamp">
+                Menghubungkan ke Database...
             </div>
         </div>
 
-        <!-- TOMBOL MENU UTAMA -->
-        <div id="main-actions" class="grid grid-cols-2 gap-3 md:gap-4"></div>
-
-        <!-- ADMIN: PENGATURAN AKUN -->
-        <div id="admin-system" class="hidden">
-            <h3 class="font-black text-slate-700 text-xs tracking-widest uppercase mb-3 px-1 mt-8">⚙️ Tambah Petugas Baru</h3>
-            <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-200">
-                <div class="grid grid-cols-2 gap-2 mb-3">
-                    <input type="number" id="new-petugas-pin" placeholder="PIN Angka" class="w-full bg-slate-50 p-3 text-xs font-bold rounded-xl border border-slate-200 outline-none focus:border-teal-400">
-                    <input type="text" id="new-petugas-nama" placeholder="Nama Panggilan" class="w-full bg-slate-50 p-3 text-xs font-bold rounded-xl border border-slate-200 outline-none focus:border-teal-400">
+        <div class="px-5 space-y-5 -mt-10 relative z-10 max-w-2xl mx-auto">
+            <!-- STATISTIK -->
+            <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200 text-center">
+                <p class="text-[10px] font-bold text-slate-400 tracking-widest mb-1">TOTAL HADIRIN</p>
+                <div class="text-7xl font-black text-slate-800 mb-2" id="dash-total">0</div>
+                <div class="flex justify-center gap-6 text-sm font-bold text-slate-500 border-t border-slate-100 pt-4 mt-2">
+                    <span>🪑 Kursi: <span id="dash-kursi" class="text-teal-600 text-lg">0</span></span>
+                    <span>🚶 Luar: <span id="dash-luar" class="text-indigo-600 text-lg">0</span></span>
                 </div>
-                <div class="grid grid-cols-2 gap-2 mb-3">
-                    <select id="new-petugas-role" class="w-full bg-slate-50 p-3 text-xs font-bold rounded-xl border border-slate-200 outline-none">
-                        <option value="Petugas Blok">Tugas Blok Kursi</option>
-                        <option value="Petugas Luar">Tugas Area Luar</option>
-                    </select>
-                    <input type="text" id="new-petugas-area" placeholder="Tugas (A / Selasar)" class="w-full bg-slate-50 p-3 text-xs font-bold rounded-xl border border-slate-200 outline-none focus:border-teal-400">
-                </div>
-                <button onclick="addPetugas()" class="w-full bg-slate-800 text-white font-bold py-3 text-xs rounded-xl active:scale-95 transition">SIMPAN PETUGAS</button>
             </div>
-        </div>
 
-        <!-- DOKUMEN & PANDUAN -->
-        <div>
-            <h3 class="font-black text-slate-700 text-xs tracking-widest uppercase mb-3 px-1 mt-8">📑 Dokumen & Bantuan</h3>
-            <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
-                <button onclick="openInfo('panduan')" class="w-full flex items-center justify-between p-4 border-b border-slate-100 active:bg-slate-50">
-                    <div class="flex items-center gap-4">
-                        <div class="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center shrink-0">📖</div>
-                        <div class="text-left"><span class="block font-bold text-sm text-slate-800">Panduan Penggunaan</span></div>
-                    </div>
+            <!-- MENU UTAMA -->
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="navigate('page-denah')" class="p-5 rounded-3xl flex flex-col justify-center items-center text-center shadow-sm border border-slate-200 bg-white active:scale-95 transition">
+                    <div class="text-4xl mb-2">🪑</div>
+                    <div class="font-black text-xs tracking-wide">DENAH KURSI</div>
+                    <div class="text-[9px] font-medium text-slate-500 mt-1">Status Blok</div>
                 </button>
-                <button onclick="openInfo('kontak')" class="w-full flex items-center justify-between p-4 border-b border-slate-100 active:bg-slate-50">
-                    <div class="flex items-center gap-4">
-                        <div class="w-8 h-8 rounded-lg bg-rose-50 flex items-center justify-center shrink-0">🚨</div>
-                        <div class="text-left"><span class="block font-bold text-sm text-slate-800">Kontak Darurat</span></div>
-                    </div>
+                <button onclick="navigate('page-luar')" class="p-5 rounded-3xl flex flex-col justify-center items-center text-center shadow-sm border border-slate-200 bg-white active:scale-95 transition">
+                    <div class="text-4xl mb-2">🚶</div>
+                    <div class="font-black text-xs tracking-wide">AREA LUAR</div>
+                    <div class="text-[9px] font-medium text-slate-500 mt-1">Hitung Manual</div>
                 </button>
             </div>
-            <button onclick="logout()" class="mt-6 w-full py-4 bg-slate-200 text-slate-600 font-bold rounded-2xl active:scale-95 transition text-xs">LOGOUT KELUAR</button>
+
+            <!-- JADWAL TUGAS -->
+            <button onclick="navigate('page-tugas')" class="w-full flex items-center justify-between p-5 mt-2 bg-gradient-to-r from-teal-600 to-emerald-600 text-white rounded-3xl shadow-md shadow-teal-500/30 active:scale-95 transition">
+                <div class="flex items-center gap-4">
+                    <div class="text-3xl">📋</div>
+                    <div class="text-left">
+                        <span class="block font-black text-sm tracking-wide">JADWAL PENUGASAN</span>
+                        <span class="text-[10px] text-teal-100 font-medium">Lihat penempatan personil</span>
+                    </div>
+                </div>
+                <span class="font-black text-lg">➔</span>
+            </button>
         </div>
     </div>
-  </div>
 
-  <!-- 3. PAGE: DENAH BLOK -->
-  <div id="page-denah" class="app-page px-4 pt-8 pb-20">
-    
-    <!-- ADMIN: PENGATURAN BLOK -->
-    <div id="admin-generate" class="hidden mb-8 space-y-4 max-w-2xl mx-auto">
-        <div class="p-5 bg-white rounded-3xl shadow-sm border border-teal-200">
-            <h3 class="font-bold mb-3 text-teal-700 text-xs uppercase">➕ Tambah 1 Blok Baru</h3>
-            <div class="flex gap-2 mb-3">
-                <input type="text" id="add-b" placeholder="Nama Blok (D)" class="w-1/2 bg-slate-50 p-3 rounded-xl text-xs font-bold outline-none border border-slate-200">
-                <input type="number" id="add-r" placeholder="Baris" class="w-1/4 bg-slate-50 p-3 rounded-xl text-xs text-center font-bold outline-none border border-slate-200">
-                <input type="number" id="add-c" placeholder="Kolom" class="w-1/4 bg-slate-50 p-3 rounded-xl text-xs text-center font-bold outline-none border border-slate-200">
+    <!-- 2. DENAH KURSI -->
+    <div id="page-denah" class="app-page px-4 pt-6 pb-20">
+        <div class="max-w-2xl mx-auto w-full bg-slate-800 text-center py-4 rounded-xl font-black text-white tracking-[0.4em] mb-6 text-[10px] shadow-md">PANGGUNG UTAMA</div>
+        <div id="grid-container" class="space-y-4 max-w-4xl mx-auto"></div>
+    </div>
+
+    <!-- 3. AREA LUAR -->
+    <div id="page-luar" class="app-page px-5 pt-8 pb-20 max-w-2xl mx-auto">
+        <div class="bg-indigo-50 border border-indigo-200 p-4 rounded-2xl mb-6 flex gap-3 items-start shadow-sm">
+            <span class="text-xl">💡</span>
+            <p class="text-xs font-medium text-indigo-900 leading-relaxed">Masukkan total jumlah hadirin yang berada di luar area blok kursi (lesehan, berdiri, dll).</p>
+        </div>
+
+        <div class="bg-white p-6 rounded-3xl flex justify-between items-center border border-slate-200 shadow-sm">
+            <div class="font-black text-slate-800 text-sm">TOTAL HADIRIN LUAR</div>
+            <div class="flex items-center gap-2">
+                <input type="number" id="input-luar-val" value="0" min="0" class="w-20 bg-slate-50 py-3 text-center font-black text-xl rounded-xl outline-none border border-slate-200 focus:border-teal-400">
+                <button onclick="saveAreaLuar()" class="bg-teal-600 text-white px-4 py-3 rounded-xl font-bold text-xs shadow-md active:scale-95 transition">SIMPAN</button>
             </div>
-            <button onclick="tambahBlokEkstra()" class="w-full bg-teal-600 text-white py-3 rounded-xl font-bold text-xs shadow-md active:scale-95 transition">TAMBAH BLOK</button>
         </div>
+    </div>
 
-        <div class="p-5 bg-white rounded-3xl shadow-sm border border-rose-200">
-            <h3 class="font-bold mb-3 text-rose-600 text-xs uppercase">⚠️ Reset & Buat Formasi Total</h3>
-            <div class="flex gap-2 mb-3">
-                <div class="w-1/3"><label class="text-[9px] text-slate-500 block text-center font-bold mb-1">TOTAL BLOK</label><input type="number" id="gen-b" value="3" class="w-full bg-slate-50 py-3 rounded-xl text-center text-xs font-bold border border-slate-200"></div>
-                <div class="w-1/3"><label class="text-[9px] text-slate-500 block text-center font-bold mb-1">BARIS</label><input type="number" id="gen-r" value="10" class="w-full bg-slate-50 py-3 rounded-xl text-center text-xs font-bold border border-slate-200"></div>
-                <div class="w-1/3"><label class="text-[9px] text-slate-500 block text-center font-bold mb-1">KOLOM</label><input type="number" id="gen-c" value="10" class="w-full bg-slate-50 py-3 rounded-xl text-center text-xs font-bold border border-slate-200"></div>
+    <!-- 4. JADWAL TUGAS -->
+    <div id="page-tugas" class="app-page px-5 pt-6 pb-20 max-w-2xl mx-auto">
+        <h2 class="text-xl font-black text-slate-800 mb-6 text-center uppercase tracking-widest border-b-2 border-slate-200 pb-3">Daftar Penugasan</h2>
+        
+        <div class="space-y-5">
+            <!-- KEAMANAN -->
+            <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm">
+                <div class="flex items-center gap-3 mb-3 pb-3 border-b border-slate-100">
+                    <span class="text-2xl">🛡️</span><h3 class="font-black text-slate-800 text-sm tracking-widest">KEAMANAN</h3>
+                </div>
+                <p class="text-[9px] text-slate-500 font-bold mb-4 uppercase leading-relaxed">Memastikan keamanan area gedung, sweeping, mengatur jaga pintu depan, belakang, lift & toilet bawah.</p>
+                <div class="space-y-3 text-xs">
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                        <p class="font-bold text-slate-700">Pengawas:</p><p class="text-teal-700 font-black">WARIHJATI (Ungaran)</p>
+                        <p class="font-bold text-slate-700 mt-2">Asisten:</p><p class="text-teal-700 font-black">CATUR (Ungaran)</p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div class="bg-slate-50 p-2 rounded-lg border border-slate-100">
+                            <p class="font-bold text-[9px] text-slate-500 mb-1">KEAMANAN PAGI</p>
+                            <ul class="font-bold text-slate-700 list-disc pl-4 text-[10px]"><li>Catur (Ungaran)</li><li>Paulus (Jogja Utara)</li></ul>
+                        </div>
+                        <div class="bg-slate-50 p-2 rounded-lg border border-slate-100">
+                            <p class="font-bold text-[9px] text-slate-500 mb-1">KEAMANAN SIANG</p>
+                            <ul class="font-bold text-slate-700 list-disc pl-4 text-[10px]"><li>Warihjati (Ungaran)</li><li>Paulus (Jogja Utara)</li></ul>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                        <table class="w-full text-[10px] font-bold text-slate-700 text-left border-separate border-spacing-y-1">
+                            <tr><td class="text-slate-500 w-[55%]">Lift Kanan</td><td>: Simon Prasetyo (Purwokerto)</td></tr>
+                            <tr><td class="text-slate-500">Lift Kiri</td><td>: Duwi (Ungaran)</td></tr>
+                            <tr><td class="text-slate-500 pt-2">Pintu Depan Pagi (S1)</td><td class="pt-2">: Eko Budi (Ungaran)</td></tr>
+                            <tr><td class="text-slate-500">Pintu Depan Pagi (S2)</td><td>: Simon Prasetyo (Purwokerto)</td></tr>
+                            <tr><td class="text-slate-500 pt-2">Pintu Depan Siang (S1)</td><td class="pt-2">: Sarastoto (Ungaran)</td></tr>
+                            <tr><td class="text-slate-500">Pintu Depan Siang (S2)</td><td>: April Dwi (Ungaran)</td></tr>
+                            <tr><td class="text-slate-500 pt-2">Pintu Belakang Pagi</td><td class="pt-2">: Hartono Widagdo (Ungaran)</td></tr>
+                            <tr><td class="text-slate-500">Pintu Belakang Siang</td><td>: Tugiyo (Jogja Selatan)</td></tr>
+                        </table>
+                    </div>
+                </div>
             </div>
-            <button onclick="generateDenah()" class="w-full bg-rose-600 text-white py-3 rounded-xl font-bold text-xs shadow-md active:scale-95 transition">HAPUS DATA LAMA & BUAT BARU</button>
+
+            <!-- KETERTIBAN -->
+            <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm">
+                <div class="flex items-center gap-3 mb-3 pb-3 border-b border-slate-100">
+                    <span class="text-2xl">🪑</span><h3 class="font-black text-slate-800 text-sm tracking-widest">KETERTIBAN</h3>
+                </div>
+                <div class="space-y-3 text-xs">
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                        <table class="w-full text-[11px] font-bold text-slate-700 text-left border-separate border-spacing-y-1">
+                            <tr><td class="text-slate-500 w-1/3">Pengawas</td><td class="text-teal-700 font-black">: WISNU JATMIKO (Semarang Brt)</td></tr>
+                            <tr><td class="text-slate-500">Asisten</td><td class="text-teal-700 font-black">: LEON (Salatiga)</td></tr>
+                            <tr><td class="text-slate-500 pt-2">Tanda-Tanda</td><td class="pt-2">: Andreas Widi (Semarang Timur)</td></tr>
+                            <tr><td class="text-slate-500">Hitung Hadirin</td><td>: Leon (Salatiga)</td></tr>
+                        </table>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                        <p class="font-bold text-[10px] text-slate-500 mb-2">PENJAGA BLOK</p>
+                        <table class="w-full text-[10px] font-bold text-slate-700 text-left border-separate border-spacing-y-1">
+                            <tr><td class="text-slate-500 w-[20%]">Blok A</td><td>: Agung Danar (Jogja Selatan)</td></tr>
+                            <tr><td class="text-slate-500">Blok B</td><td>: Yanuar (Jogja Selatan)</td></tr>
+                            <tr><td class="text-slate-500">Blok C</td><td>: Teofilius (Purwokerto)</td></tr>
+                            <tr><td class="text-slate-500">Blok D</td><td>: Jadi (Jogja Utara)</td></tr>
+                            <tr><td class="text-slate-500">Blok E</td><td>: Bagus Andreanto (Jogja Selatan)</td></tr>
+                            <tr><td class="text-slate-500">Blok F</td><td>: Wisnu Jatmiko (Semarang Barat)</td></tr>
+                            <tr><td class="text-slate-500">Blok G</td><td>: Hendrik (Semarang Barat)</td></tr>
+                            <tr><td class="text-slate-500">Blok H</td><td>: Eko Heri (Semarang Barat)</td></tr>
+                        </table>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                        <p class="font-bold text-[10px] text-slate-500 mb-2">TANDA ACARA DIMULAI</p>
+                        <table class="w-full text-[10px] font-bold text-slate-700 text-left border-separate border-spacing-y-1">
+                            <tr><td class="text-slate-500 w-1/3">Dalam Gedung</td><td>: Kodir (Purwokerto)</td></tr>
+                            <tr><td class="text-slate-500">Luar Gedung</td><td>: Hery Sasongko (Jogja Utara)</td></tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HUMAS & EVAKUASI -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm">
+                    <div class="flex items-center gap-2 mb-2 pb-2 border-b border-slate-100">
+                        <span class="text-xl">🤝</span><h3 class="font-black text-slate-800 text-sm tracking-widest">HUMAS</h3>
+                    </div>
+                    <div class="text-[10px] font-bold text-slate-700 space-y-1">
+                        <p><span class="text-slate-400">Pengawas:</span> <span class="text-teal-700 font-black">YUSAK HENDARKO</span></p>
+                        <p><span class="text-slate-400">Asisten:</span> <span class="text-teal-700 font-black">EKO HERI</span></p>
+                        <p class="pt-2 text-slate-400">Penerima Tamu:</p>
+                        <ul class="list-disc pl-4"><li>Yusak Hendarko</li><li>Leon</li><li>Hendrik</li><li>Andreas Widi</li></ul>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm">
+                    <div class="flex items-center gap-2 mb-2 pb-2 border-b border-slate-100">
+                        <span class="text-xl">🗺️</span><h3 class="font-black text-slate-800 text-sm tracking-widest">EVAKUASI</h3>
+                    </div>
+                    <div class="text-[10px] font-bold text-slate-700 space-y-1">
+                        <p><span class="text-slate-400">Pengawas:</span> <span class="text-teal-700 font-black">BAGUS ANDREANTO</span></p>
+                        <p><span class="text-slate-400">Asisten:</span> <span class="text-teal-700 font-black">HENDRIK</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BAPTISAN -->
+            <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm">
+                <div class="flex items-center gap-3 mb-3 pb-3 border-b border-slate-100">
+                    <span class="text-2xl">💧</span><h3 class="font-black text-slate-800 text-sm tracking-widest">BAPTISAN</h3>
+                </div>
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 mb-3">
+                    <p class="font-bold text-slate-700 text-xs">Pengawas: <span class="text-teal-700 font-black">GIRI PRASETYO</span></p>
+                    <p class="font-bold text-slate-700 text-xs">Asisten: <span class="text-teal-700 font-black">HERY SASONGKO</span></p>
+                </div>
+                <table class="w-full text-[10px] font-bold text-slate-700 text-left border-separate border-spacing-y-1">
+                    <tr><td class="text-slate-500 w-[45%]">Tanda Calon Baptis</td><td>: Yansen</td></tr>
+                    <tr><td class="text-slate-500">Toilet Sdr</td><td>: Kodir</td></tr>
+                    <tr><td class="text-slate-500">Toilet Sdri</td><td>: Slamet Rahayu</td></tr>
+                    <tr><td class="text-slate-500 align-top pt-2">Kolam Baptis</td><td class="pt-2">: Hartono Budi, Sucipto, Tugiyo, Duwi, Yadi</td></tr>
+                </table>
+            </div>
         </div>
     </div>
 
-    <!-- Panggung -->
-    <div class="max-w-2xl mx-auto w-full bg-slate-800 text-center py-4 rounded-xl font-black text-white tracking-[0.4em] mb-6 text-[10px] md:text-xs shadow-md">PANGGUNG UTAMA</div>
-    
-    <!-- Render Denah -->
-    <div id="grid-container" class="space-y-8 max-w-4xl mx-auto overflow-x-auto pb-4"></div>
-  </div>
-
-  <!-- 4. PAGE: INPUT LUAR -->
-  <div id="page-luar" class="app-page px-5 pt-8 pb-20 max-w-2xl mx-auto">
-    <h3 class="font-black text-slate-800 text-lg mb-6 text-center uppercase">Hitung Area Luar</h3>
-    
-    <div id="admin-add-area" class="hidden mb-6 bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex gap-2">
-        <input type="text" id="new-area-name" placeholder="Nama Area (Balkon)" class="w-full bg-slate-50 px-3 py-3 rounded-xl text-xs font-bold outline-none border border-slate-200 focus:border-teal-400">
-        <button onclick="tambahAreaLuar()" class="bg-teal-600 text-white px-4 py-3 rounded-xl font-bold text-xs shrink-0 shadow-sm active:scale-95">TAMBAH</button>
-    </div>
-
-    <div id="luar-container" class="space-y-3"></div>
-  </div>
-
-  <!-- 5. PAGE: INFO -->
-  <div id="page-info" class="app-page px-5 pt-8 pb-20 max-w-2xl mx-auto">
-      <div id="content-info" class="bg-white p-5 md:p-6 rounded-3xl shadow-sm border border-slate-200"></div>
-  </div>
-
-
-  <!-- SCRIPT LOGIC -->
-  <script>
-    // MASUKKAN URL API GOOGLE SCRIPT ANDA DI SINI
-    const API_URL = "https://script.google.com/macros/s/AKfycbxsDq-FMNioyTRftAjrsQtATbk36Trgco81fsiMJzUbacRUnj8KduIlJnbZ4_Jw44goUA/exec"; 
-    
-    let currentUser = null;
-
-    const showLoading = (show) => document.getElementById('loading').style.display = show ? 'flex' : 'none';
-
-    function navigate(pageId, title = "") {
-      document.querySelectorAll('.app-page').forEach(el => el.classList.remove('is-visible'));
-      document.getElementById(pageId).classList.add('is-visible');
-      
-      const topbar = document.getElementById('topbar');
-      if(pageId === 'page-login') topbar.classList.add('hidden'); 
-      else {
-          topbar.classList.remove('hidden');
-          document.getElementById('top-title').innerText = title;
-          document.getElementById('btn-back').classList.toggle('hidden', pageId === 'page-dashboard');
-      }
-      window.scrollTo(0, 0); 
-    }
-    
-    const goDashboard = () => { navigate('page-dashboard', 'PANEL PETUGAS'); loadDashboard(); };
-
-    const apiPost = async (payload) => {
-      return fetch(API_URL, { method: 'POST', body: JSON.stringify(payload), headers: { 'Content-Type': 'text/plain;charset=utf-8' } });
-    };
-
-    async function login() {
-      const pin = document.getElementById('pin-input').value;
-      if(!pin) return alert("Masukkan PIN Anda.");
-      
-      showLoading(true);
-      try {
-        const res = await (await fetch(`${API_URL}?action=login&pin=${pin}`)).json();
-        if(res.status === "success") {
-          currentUser = res.user;
-          document.getElementById('user-name').innerText = currentUser.nama.split(" ")[0]; 
-          document.getElementById('user-role').innerText = currentUser.role === 'Admin' ? 'PENGAWAS UTAMA' : `TUGAS: ${currentUser.area.toUpperCase()}`;
-          document.getElementById('pin-input').value = "";
-          goDashboard();
-        } else alert("PIN Tidak Valid.");
-      } catch(e) { alert("Gagal koneksi server."); }
-      showLoading(false);
-    }
-    
-    const logout = () => { currentUser = null; navigate('page-login'); };
-
-    async function loadDashboard() {
-      showLoading(true);
-      
-      // Normalisasi Role (Mengganti Spasi menjadi Underscore jika ada, agar pengecekan selalu konsisten)
-      const isAdmin = currentUser.role.replace(" ", "_") === "Admin";
-      
-      document.getElementById('card-stats').classList.toggle('hidden', !isAdmin);
-      document.getElementById('admin-system').classList.toggle('hidden', !isAdmin);
-
-      try {
-        const res = await (await fetch(`${API_URL}?action=getDashboard`)).json();
-        if(res.status === "success") {
-          document.getElementById('dash-total').innerText = res.data.total_hadirin;
-          document.getElementById('dash-kursi').innerText = res.data.detail.kursi;
-          document.getElementById('dash-luar').innerText = res.data.detail.luar;
-          renderMainActions(res.data.daftar_blok, res.data.daftar_area);
-        }
-      } catch(e) { console.error(e); }
-      showLoading(false);
-    }
-
-    function renderMainActions(blocks, areas) {
-      const container = document.getElementById('main-actions');
-      container.innerHTML = "";
-      
-      // PERBAIKAN BUG UTAMA: Menyamakan format Role (Spasi atau Garis Bawah akan dibaca sama)
-      const roleStr = currentUser.role.replace(" ", "_"); 
-      const area = currentUser.area;
-
-      const createBtn = (icon, title, desc, styleClass, onClickFn) => {
-        const btn = document.createElement('button');
-        btn.className = `p-4 rounded-2xl flex flex-col justify-center items-center text-center shadow-sm border transition transform active:scale-95 ${styleClass}`;
-        btn.innerHTML = `<div class="text-3xl mb-1">${icon}</div><div class="font-black text-xs tracking-wide">${title}</div><div class="text-[9px] font-medium opacity-80 mt-1">${desc}</div>`;
-        btn.onclick = onClickFn;
-        container.appendChild(btn);
-      };
-
-      if(roleStr === "Admin") {
-        createBtn('🪑', 'DENAH KURSI', 'Pantau Blok', 'bg-white text-slate-800 border-slate-200', () => openDenah("All"));
-        createBtn('🚶', 'AREA LUAR', 'Hitung Manual', 'bg-white text-slate-800 border-slate-200', () => openLuar(areas, "Semua Area"));
-      } else if (roleStr === "Petugas_Blok") {
-        createBtn('🪑', `TUGAS BLOK ${area}`, 'Buka denah kursi', 'bg-teal-600 text-white border-transparent col-span-2 shadow-teal-500/30', () => openDenah(area));
-      } else if (roleStr === "Petugas_Luar") {
-        // PERBAIKAN BUG 2: Jika Area belum ditambahkan Admin di Hadirin_Luar, tombol tetap dibuatkan (Auto-Bypass)
-        let myArea = areas.find(a => a.area.trim().toLowerCase() === area.trim().toLowerCase());
-        if(!myArea) { myArea = { area: area, jumlah: 0 }; } 
+    <!-- JAVASCRIPT LOGIC (API FETCH DARI SPREADSHEET) -->
+    <script>
+        // --- GANTI DENGAN URL API APPS SCRIPT ANDA ---
+        const API_URL = "YOUR_GOOGLE_SCRIPT_WEB_APP_URL"; 
         
-        createBtn('🚶', `TUGAS AREA ${area}`, 'Input hadirin', 'bg-indigo-600 text-white border-transparent col-span-2 shadow-indigo-500/30', () => openLuar([myArea], area));
-      }
-    }
+        // Pemetaan nama petugas untuk header blok
+        const namaPetugas = {
+            'A': 'AGUNG DANAR', 'B': 'YANUAR', 'C': 'TEOFILIUS',
+            'D': 'JADI', 'E': 'BAGUS ANDREANTO', 'F': 'WISNU JATMIKO'
+        };
 
-    async function addPetugas() {
-        const pin = document.getElementById('new-petugas-pin').value;
-        const nama = document.getElementById('new-petugas-nama').value;
-        const role = document.getElementById('new-petugas-role').value; // Mengirim format sesuai yg ada di select option
-        const area = document.getElementById('new-petugas-area').value;
-        if(!pin || !nama || !area) return alert("Lengkapi data petugas!");
-        showLoading(true);
-        await apiPost({ action: 'tambahPetugas', pin, nama, role, area });
-        alert(`Petugas ${nama} berhasil ditambahkan! (PIN: ${pin})`);
-        document.getElementById('new-petugas-pin').value = "";
-        document.getElementById('new-petugas-nama').value = "";
-        document.getElementById('new-petugas-area').value = "";
-        showLoading(false);
-    }
-
-    // --- LOGIKA GRID DENAH ---
-    async function openDenah(blokId) {
-      navigate('page-denah', blokId === "All" ? "SEMUA BLOK" : `BLOK ${blokId}`);
-      showLoading(true);
-      document.getElementById('admin-generate').classList.toggle('hidden', currentUser.role.replace(" ", "_") !== "Admin");
-      
-      try {
-        const res = await (await fetch(`${API_URL}?action=getBlok&blok=${blokId}`)).json();
-        if(res.status === "success") {
-            if(res.data.length === 0) document.getElementById('grid-container').innerHTML = `<div class="text-center bg-white p-8 rounded-3xl border border-slate-200"><p class="text-slate-500 font-bold text-sm">Data kursi kosong.</p></div>`;
-            else renderGrid(res.data);
-        }
-      } catch(e) {}
-      showLoading(false);
-    }
-
-    function renderGrid(seatData) {
-      const container = document.getElementById('grid-container');
-      container.innerHTML = "";
-      const blocks = [...new Set(seatData.map(s => s.blok))].sort();
-
-      blocks.forEach(blok => {
-        const blokData = seatData.filter(s => s.blok === blok);
-        const blockDiv = document.createElement('div');
-        blockDiv.className = "bg-white p-3 md:p-5 rounded-3xl shadow-sm border border-slate-200 relative min-w-max";
+        let dbKursi = [];
+        let daftarBlok = [];
         
-        blockDiv.innerHTML = `
-            <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white px-6 py-1 rounded-full shadow-md font-black tracking-widest text-[10px]">BLOK ${blok}</div>
-            <div class="mt-4 flex justify-between text-[9px] md:text-[10px] text-slate-400 font-bold mb-4 px-2">
-                <span>Total: ${blokData.length} Kursi</span><span>Petugas: ${currentUser.role.replace(" ", "_") === 'Admin' ? 'Admin' : currentUser.nama.split(" ")[0]}</span>
-            </div>`;
-        
-        const maxKolom = Math.max(...blokData.map(s => s.kolom));
-        const maxBaris = Math.max(...blokData.map(s => s.baris));
-        
-        const grid = document.createElement('div');
-        grid.style.display = "grid";
-        grid.style.gridTemplateColumns = `20px repeat(${maxKolom}, minmax(32px, 1fr))`;
-        grid.className = "gap-1 md:gap-1.5 items-center justify-items-center";
+        const showLoading = (show) => document.getElementById('loading').style.display = show ? 'flex' : 'none';
 
-        grid.appendChild(document.createElement('div'));
-        for (let c = 1; c <= maxKolom; c++) {
-            const colLabel = document.createElement('div');
-            colLabel.className = "text-[9px] md:text-[10px] font-bold text-slate-400 pb-1";
-            colLabel.innerText = c;
-            grid.appendChild(colLabel);
+        function navigate(pageId) {
+            document.querySelectorAll('.app-page').forEach(el => el.classList.remove('is-visible'));
+            document.getElementById(pageId).classList.add('is-visible');
+            
+            const btnHome = document.getElementById('btn-home');
+            const btnAdmin = document.getElementById('btn-admin');
+            const title = document.getElementById('top-title');
+            
+            if(pageId === 'page-dashboard') { 
+                btnHome.classList.add('hidden');
+                btnAdmin.classList.remove('hidden');
+                title.innerText = "PORTAL TATA TERTIB";
+            } else {
+                btnHome.classList.remove('hidden');
+                btnAdmin.classList.add('hidden');
+                if(pageId === 'page-denah') title.innerText = "DENAH KURSI";
+                if(pageId === 'page-luar') title.innerText = "AREA LUAR";
+                if(pageId === 'page-tugas') title.innerText = "JADWAL TUGAS";
+            }
+            window.scrollTo(0, 0); 
         }
 
-        for (let r = 1; r <= maxBaris; r++) {
-            const rowLabel = document.createElement('div');
-            rowLabel.className = "text-[9px] md:text-[10px] font-bold text-slate-400 pr-1 w-full text-right";
-            rowLabel.innerText = r;
-            grid.appendChild(rowLabel);
+        const apiPost = async (payload) => {
+            return fetch(API_URL, { method: 'POST', body: JSON.stringify(payload), headers: { 'Content-Type': 'text/plain;charset=utf-8' } });
+        };
 
-            for (let c = 1; c <= maxKolom; c++) {
-                const kursi = blokData.find(s => s.baris === r && s.kolom === c);
-                if (kursi) {
-                    const btn = document.createElement('button');
-                    const isKosong = kursi.status === "Kosong";
-                    let num = ((kursi.baris - 1) * maxKolom) + kursi.kolom;
-                    btn.className = `w-full aspect-square rounded-md md:rounded-lg flex justify-center items-center text-[9px] md:text-xs font-black transition-transform active:scale-75 ${isKosong ? 'seat-green' : 'seat-red'}`;
-                    btn.innerText = num.toString().padStart(2, '0');
-                    btn.onclick = () => toggleKursi(kursi, btn);
-                    grid.appendChild(btn);
-                } else {
-                    grid.appendChild(document.createElement('div'));
+        function stampTime() {
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+            document.getElementById('timestamp').innerText = `Terakhir sinkron: ${new Date().toLocaleDateString('id-ID', options)}`;
+        }
+
+        // --- FETCH DATA DARI GOOGLE SHEETS (REAL-TIME) ---
+        async function loadDataFromAPI() {
+            showLoading(true);
+            try {
+                const res = await (await fetch(`${API_URL}?action=getData`)).json();
+                if(res.status === "success") {
+                    document.getElementById('dash-kursi').innerText = res.data.detail.kursi;
+                    document.getElementById('dash-luar').innerText = res.data.detail.luar;
+                    document.getElementById('dash-total').innerText = res.data.total_hadirin;
+                    document.getElementById('input-luar-val').value = res.data.detail.luar;
+                    
+                    dbKursi = res.data.kursi || [];
+                    daftarBlok = res.data.daftar_blok || [];
+                    
+                    initDenah();
+                    stampTime();
                 }
+            } catch(e) {
+                alert("Gagal mengambil data dari Database Spreadsheet.");
+            }
+            showLoading(false);
+        }
+
+        // --- RENDER GRID DINAMIS BERDASARKAN SPREADSHEET ---
+        function initDenah() {
+            const container = document.getElementById('grid-container');
+            container.innerHTML = "";
+
+            // Jika Spreadsheet masih kosong
+            if(daftarBlok.length === 0) {
+                container.innerHTML = `<div class="bg-white p-8 text-center rounded-3xl border border-slate-200"><p class="text-slate-500 font-bold text-sm">Denah belum dibuat di Database.<br>Gunakan fitur Admin untuk Generate.</p></div>`;
+                return;
+            }
+
+            daftarBlok.sort().forEach(blok => {
+                const blokData = dbKursi.filter(s => s.blok === blok);
+                
+                let kursiTerisi = 0;
+                blokData.forEach(k => { if(k.status === "Terisi") kursiTerisi++; });
+                let totalKursi = blokData.length;
+                let petugasBlok = namaPetugas[blok] || "Petugas";
+
+                const blockDiv = document.createElement('div');
+                blockDiv.className = "bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden mb-4";
+                
+                const headerHtml = `
+                    <button onclick="toggleCollapse('${blok}')" class="w-full flex justify-between items-center p-4 md:p-5 bg-slate-50 hover:bg-slate-100 transition border-b border-slate-200">
+                        <div class="text-left">
+                            <h3 class="font-black text-lg md:text-xl text-slate-800 tracking-wider">BLOK ${blok}</h3>
+                            <p class="text-[10px] md:text-xs font-bold text-teal-600 uppercase mt-1">PETUGAS: <span class="text-lg md:text-xl font-black block sm:inline text-teal-800">${petugasBlok}</span></p>
+                        </div>
+                        <div class="text-right flex flex-col items-end gap-1">
+                            <div class="text-[10px] md:text-xs font-bold text-slate-400 bg-white px-3 py-1 rounded-full border border-slate-200"><span id="count-${blok}" class="text-rose-600">${kursiTerisi}</span> / ${totalKursi}</div>
+                            <span id="icon-${blok}" class="text-xl text-slate-400 font-black transition-transform duration-300">▼</span>
+                        </div>
+                    </button>
+                `;
+
+                const contentDiv = document.createElement('div');
+                contentDiv.id = `content-${blok}`;
+                contentDiv.className = "collapsible-content p-3 md:p-5 overflow-x-auto";
+                
+                const maxKolom = Math.max(...blokData.map(s => s.kolom));
+                const maxBaris = Math.max(...blokData.map(s => s.baris));
+
+                const grid = document.createElement('div');
+                grid.style.display = "grid";
+                grid.style.gridTemplateColumns = `20px repeat(${maxKolom}, minmax(32px, 1fr))`;
+                grid.className = "gap-1 md:gap-1.5 items-center justify-items-center w-max mx-auto pb-2";
+
+                // Header Kolom Sumbu X
+                grid.appendChild(document.createElement('div'));
+                for (let c = 1; c <= maxKolom; c++) {
+                    const colLabel = document.createElement('div');
+                    colLabel.className = "text-[9px] md:text-[10px] font-bold text-slate-400 pb-1";
+                    colLabel.innerText = c;
+                    grid.appendChild(colLabel);
+                }
+
+                // Render Baris dan Kursi
+                for (let r = 1; r <= maxBaris; r++) {
+                    const rowLabel = document.createElement('div');
+                    rowLabel.className = "text-[9px] md:text-[10px] font-bold text-slate-400 pr-1 w-full text-right";
+                    rowLabel.innerText = r;
+                    grid.appendChild(rowLabel);
+
+                    for (let c = 1; c <= maxKolom; c++) {
+                        const kursi = blokData.find(s => s.baris === r && s.kolom === c);
+                        
+                        if (kursi) {
+                            const isKosong = kursi.status === "Kosong";
+                            let num = ((r - 1) * maxKolom) + c;
+                            
+                            const btn = document.createElement('button');
+                            btn.className = `w-full aspect-square rounded-md md:rounded-lg flex justify-center items-center text-[9px] md:text-[11px] font-black transition-transform active:scale-75 ${isKosong ? 'seat-green' : 'seat-red'}`;
+                            btn.innerText = num.toString().padStart(2, '0');
+                            
+                            btn.onclick = () => {
+                                const newStatus = kursi.status === "Kosong" ? "Terisi" : "Kosong";
+                                kursi.status = newStatus; // Optimistic UI update
+                                
+                                newStatus === "Kosong" ? btn.classList.replace('seat-red', 'seat-green') : btn.classList.replace('seat-green', 'seat-red');
+                                
+                                let count = parseInt(document.getElementById(`count-${blok}`).innerText);
+                                document.getElementById(`count-${blok}`).innerText = newStatus === "Terisi" ? count + 1 : count - 1;
+                                
+                                // POST ke Spreadsheet via API
+                                apiPost({ action: 'updateKursi', id_kursi: kursi.id_kursi, status_baru: newStatus }).then(() => loadDataFromAPI());
+                            };
+                            grid.appendChild(btn);
+                        } else {
+                            grid.appendChild(document.createElement('div'));
+                        }
+                    }
+                }
+                
+                contentDiv.appendChild(grid);
+                blockDiv.innerHTML = headerHtml;
+                blockDiv.appendChild(contentDiv);
+                container.appendChild(blockDiv);
+            });
+        }
+
+        function toggleCollapse(blokId) {
+            const content = document.getElementById(`content-${blokId}`);
+            const icon = document.getElementById(`icon-${blokId}`);
+            if(content.classList.contains('expanded')) {
+                content.classList.remove('expanded');
+                icon.style.transform = "rotate(0deg)";
+            } else {
+                content.classList.add('expanded');
+                icon.style.transform = "rotate(180deg)";
             }
         }
 
-        blockDiv.appendChild(grid);
-        
-        if(currentUser.role.replace(" ", "_") === "Admin") {
-            const resetBtn = document.createElement('button');
-            resetBtn.className = "mt-5 w-full py-2.5 bg-rose-50 text-rose-600 font-bold rounded-xl text-xs transition border border-rose-100";
-            resetBtn.innerHTML = `Kosongkan Blok ${blok}`;
-            resetBtn.onclick = () => resetBlokData(blok);
-            blockDiv.appendChild(resetBtn);
+        async function saveAreaLuar() {
+            const val = parseInt(document.getElementById('input-luar-val').value) || 0;
+            const btn = event.target;
+            btn.innerText = "⏳";
+            await apiPost({ action: 'updateLuar', jumlah: val });
+            await loadDataFromAPI();
+            btn.innerText = "✓"; setTimeout(() => btn.innerText = "SIMPAN", 1500);
         }
-        container.appendChild(blockDiv);
-      });
-    }
 
-    function toggleKursi(kursi, btn) {
-      const isKosong = kursi.status === "Kosong";
-      kursi.status = isKosong ? "Terisi" : "Kosong";
-      isKosong ? btn.classList.replace('seat-green', 'seat-red') : btn.classList.replace('seat-red', 'seat-green');
-      apiPost({ action: 'updateKursi', id_kursi: kursi.id_kursi, status_baru: kursi.status });
-    }
-    
-    async function resetBlokData(blok) {
-      if(!confirm(`Yakin kosongkan Blok ${blok}?`)) return;
-      showLoading(true);
-      await apiPost({ action: 'resetBlok', blok: blok });
-      openDenah(blok === "All" ? "All" : blok);
-    }
-
-    async function tambahBlokEkstra() {
-        const b = document.getElementById('add-b').value, r = document.getElementById('add-r').value, c = document.getElementById('add-c').value;
-        if(!b || !r || !c) return alert("Isi form dengan lengkap!");
-        showLoading(true);
-        await apiPost({ action: 'tambahBlokSpesifik', nama_blok: b, baris: parseInt(r), kolom: parseInt(c) });
-        openDenah("All");
-    }
-
-    async function generateDenah() {
-      const b = document.getElementById('gen-b').value, r = document.getElementById('gen-r').value, c = document.getElementById('gen-c').value;
-      if(!confirm("Data kursi lama akan dihapus total. Lanjutkan?")) return;
-      showLoading(true);
-      await apiPost({ action: 'generateDenah', jumlah_blok: parseInt(b), baris: parseInt(r), kolom: parseInt(c) });
-      openDenah("All");
-    }
-
-    // --- LOGIKA AREA LUAR ---
-    function openLuar(areas, title) {
-      navigate('page-luar', title.toUpperCase());
-      const isAdmin = currentUser.role.replace(" ", "_") === "Admin";
-      document.getElementById('admin-add-area').classList.toggle('hidden', !isAdmin);
-      
-      const container = document.getElementById('luar-container');
-      container.innerHTML = "";
-
-      areas.forEach(a => {
-        const div = document.createElement('div');
-        div.className = "bg-white p-4 rounded-2xl flex justify-between items-center border border-slate-200 shadow-sm gap-2";
-        let delBtn = isAdmin ? `<button onclick="hapusAreaLuar('${a.area}')" class="bg-rose-50 text-rose-500 px-3 py-3 rounded-xl font-bold text-sm shrink-0">🗑️</button>` : "";
-        
-        div.innerHTML = `
-          <div class="font-bold text-slate-800 text-sm truncate w-full">${a.area}</div>
-          <div class="flex items-center gap-2 shrink-0">
-            <input type="number" id="input-${a.area.replace(/\s/g,'')}" value="${a.jumlah}" class="w-16 sm:w-20 bg-slate-50 py-3 text-center font-black text-lg rounded-xl outline-none border border-slate-200 focus:border-teal-400">
-            <button onclick="saveLuar('${a.area}', '${a.area.replace(/\s/g,'')}')" class="bg-teal-600 text-white px-4 py-3 rounded-xl font-bold text-xs shadow-md active:scale-95">SAVE</button>
-            ${delBtn}
-          </div>
-        `;
-        container.appendChild(div);
-      });
-    }
-
-    async function saveLuar(areaName, inputId) {
-      const val = document.getElementById(`input-${inputId}`).value;
-      const btn = event.target;
-      btn.innerText = "⏳";
-      
-      // Jika Area belum terdaftar di database (karena auto-bypass), maka harus di Add dulu sebelum Update
-      await apiPost({ action: 'tambahAreaLuar', nama_area: areaName });
-      await apiPost({ action: 'updateLuar', area: areaName, jumlah: parseInt(val) });
-      
-      btn.innerText = "✓"; setTimeout(() => btn.innerText = "SAVE", 1500);
-    }
-    
-    async function tambahAreaLuar() {
-        const name = document.getElementById('new-area-name').value;
-        if(!name) return;
-        showLoading(true);
-        await apiPost({ action: 'tambahAreaLuar', nama_area: name });
-        document.getElementById('new-area-name').value = "";
-        const res = await (await fetch(`${API_URL}?action=getDashboard`)).json();
-        openLuar(res.data.daftar_area, "Semua Area");
-        showLoading(false);
-    }
-    
-    async function hapusAreaLuar(name) {
-        if(!confirm(`Hapus area "${name}"?`)) return;
-        showLoading(true);
-        await apiPost({ action: 'hapusAreaLuar', nama_area: name });
-        const res = await (await fetch(`${API_URL}?action=getDashboard`)).json();
-        openLuar(res.data.daftar_area, "Semua Area");
-        showLoading(false);
-    }
-
-    function openInfo(type) {
-        navigate('page-info', 'DOKUMEN');
-        const container = document.getElementById('content-info');
-        if(type === 'panduan') {
-            container.innerHTML = `<h3 class="font-black text-sm mb-4 text-teal-800">📖 Panduan Pemakaian</h3><ul class="space-y-3 text-xs text-slate-600 leading-relaxed"><li class="flex gap-2"><span class="font-bold">1.</span><p>Pilih menu Tugas di Dashboard.</p></li><li class="flex gap-2"><span class="font-bold">2.</span><p>Pada Denah, tap kursi <b class="text-emerald-600">Hijau (Kosong)</b> untuk mengubahnya menjadi <b class="text-rose-600">Merah (Terisi)</b>.</p></li><li class="flex gap-2"><span class="font-bold">3.</span><p>Perhatikan nomor di samping dan atas blok untuk memandu posisi baris dan kolom.</p></li></ul>`;
-        } else if (type === 'kontak') {
-            container.innerHTML = `<h3 class="font-black text-sm mb-4 text-rose-600">🚨 Kontak Darurat</h3><div class="space-y-2"><a href="tel:112" class="flex justify-between items-center p-4 bg-rose-50 rounded-2xl"><p class="font-bold text-rose-700 text-xs">Polisi & Medis</p><span class="font-black text-rose-600">112 📞</span></a></div>`;
+        // --- FITUR ADMIN TERSEMBUNYI ---
+        async function bukaMenuAdmin() {
+            const sandi = prompt("Masukkan Sandi Administrator:");
+            if (sandi === "admin") {
+                const aksi = prompt("MENU ADMIN:\nKetik '1' untuk Reset Semua Kursi ke Nol\nKetik '2' untuk Generate Formasi (Blok A-D 13x11 & E-F 13x6)");
+                if (aksi === "1") {
+                    if(confirm("Yakin mereset seluruh data di Spreadsheet?")) {
+                        showLoading(true);
+                        await apiPost({ action: 'resetAll' });
+                        await loadDataFromAPI();
+                        alert("Data berhasil dikosongkan.");
+                    }
+                } else if (aksi === "2") {
+                    if(confirm("Data denah lama di Excel akan TERHAPUS dan diganti formasi 13x11 & 13x6. Lanjut?")) {
+                        showLoading(true);
+                        await apiPost({ action: 'generateFormasiBaru' });
+                        await loadDataFromAPI();
+                        alert("Formasi baru berhasil dibuat di Spreadsheet!");
+                    }
+                }
+            } else if (sandi !== null) {
+                alert("Sandi salah.");
+            }
         }
-    }
-  </script>
+
+        window.onload = loadDataFromAPI;
+
+    </script>
 </body>
 </html>
